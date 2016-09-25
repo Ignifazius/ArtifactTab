@@ -1,0 +1,6 @@
+## Title: BetterArtifactTalents
+## Version: 0.1
+## Author: Ignifazius
+## Interface: 70000
+
+ArtifactTab.lua
