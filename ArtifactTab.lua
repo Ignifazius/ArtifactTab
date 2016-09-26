@@ -16,43 +16,45 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]	
 local btnPos = 0
-local lastFrame
+local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
 
-lastFrame = PlayerTalentFrameTab3
+local speccList = {
+	-- Fishing
+	[133755] = "Fishing",
+	-- DK
+	[128292] = "Frost",
+	[128403] = "Unholy",
+	[128402] = "Blood",
+	-- Druid
+	[128821] = "Guardian",
+	[128860] = "Feral",
+	[128306] = "Restoration",
+	[128858] = "Boomkin", --"Balance"
+	-- Paladin
+	[128823] = "Holy",
+	[120978] = "Retribution",
+	[128867] = "Protection",
+}
 
 local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("ADDON_LOADED");
 	eventResponseFrame:RegisterEvent("BAG_UPDATE");
 	eventResponseFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
-	eventResponseFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+	--eventResponseFrame:RegisterEvent("PLAYER_ENTERING_WORLD");		
 	
-	
-	
-	local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
-		if (event == "PLAYER_ENTERING_WORLD") then
-			--PlayerTalentFrame_Refresh()
-			scanArtes()
-		end
-		if (event == "BAG_UPDATE" or "PLAYER_EQUIPMENT_CHANGED") then
-			clearList()
-			scanArtes()
-		end
-	end
-	
-	eventResponseFrame:SetScript("OnEvent", eventHandler);
-
-
---[[
-local b = CreateFrame("Button", "MyButton", UIParent, "UIPanelButtonTemplate")
-	b:SetSize(80 ,22) -- width, height
-	b:SetText("Button!")
-	b:SetPoint("CENTER")
-	b:SetScript("OnClick", function()
+local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
+	if (event == "ADDON_LOADED") then
 		scanArtes()
-		b:Hide()
-	end)
-]]--
+	end
+	if (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED") then
+		clearList()
+		scanArtes()
+	end
+end
+
+eventResponseFrame:SetScript("OnEvent", eventHandler);
+
 
 function clearList()
 	for i=1,#btnList do
@@ -63,6 +65,7 @@ end
 
 
 function scanArtes()
+	--print("ping")
 	lastFrame = PlayerTalentFrameTab3
 	for container=1,5 do
 		for slot=1,32 do
@@ -71,7 +74,7 @@ function scanArtes()
 			if quality == 6 then
 				name = GetItemInfo(itemID)
 				--print(container.." "..slot.." "..name.." "..quality)
-				createArteButton(name, container, slot)
+				createArteButton(itemID, container, slot) --name
 			end			
 		end
 	end
@@ -79,22 +82,29 @@ function scanArtes()
 end
 
 function createArteButton(name, container, slot)
-	buttonArte = CreateFrame("Button",name,PlayerTalentFrame,"UIPanelButtonTemplate")
-	buttonArte:SetPoint("LEFT", lastFrame ,"RIGHT", 0, 0)
-	--bFontString = buttonArte:CreateFontString()
-	buttonArte:SetText(name)
-	--h = bFontString:GetStringHeight()
-	--w = bFontString:GetStringWidth()
-	local lng = name:len()
-	buttonArte:SetSize(lng*8,22)
-	--buttonArte:SetSize(w,h)
-	buttonArte:SetText(name)
+	buttonArte = createButton(name, lastFrame)
 	buttonArte:SetScript("OnClick", function()
 		SocketContainerItem(container, slot)
 	end)
 	buttonArte:Show()
+	--PanelTemplates_TabResize(buttonArte, 0);
+	--print(PanelTemplates_GetTabWidth(buttonArte))
 	table.insert(btnList, buttonArte)
-	lastFrame = buttonArte;	
+	lastFrame = buttonArte;
+end
+
+function createButton(name, frame)
+	local b = CreateFrame("Button",name,PlayerTalentFrame)
+	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
+	bFontString = b:CreateFontString()
+	bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	bFontString:SetText(arteToSpecc(name))
+	bFontString:SetAllPoints(b)
+	b:SetFontString(bFontString)
+	b:SetSize(bFontString:GetWidth()+30,30)--*1.4
+	b:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
+	b:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+	return b
 end
 
 function createEquipedButton()
@@ -103,11 +113,7 @@ function createEquipedButton()
 	if itemId then -- somehow the ID is nil if the player logs in
 		name, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
-			buttonArte = CreateFrame("Button",name,PlayerTalentFrame,"UIPanelButtonTemplate")
-			buttonArte:SetPoint("LEFT", lastFrame ,"RIGHT", 0, 0)
-			buttonArte:SetText(name)
-			local lng = name:len()
-			buttonArte:SetSize(lng*8,22)
+			buttonArte = createButton(itemId, lastFrame) --name		
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
 			end)
@@ -116,4 +122,13 @@ function createEquipedButton()
 			lastFrame = buttonArte;
 		end
 	end
+end
+
+function arteToSpecc(id)
+	local retID = speccList[id]
+	if retID == nil then
+		name = GetItemInfo(id)
+		return name 
+	end
+	return retID
 end
