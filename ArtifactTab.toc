@@ -1,6 +1,10 @@
 ## Title: BetterArtifactTalents
-## Version: 0.1
+## Version: 0.2
 ## Author: Ignifazius
 ## Interface: 70000
 
+
+localization.core.lua
+localization.de.lua
+localization.en.lua
 ArtifactTab.lua

@@ -15,26 +15,62 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]	
+local _, L = ...;
 local btnPos = 0
 local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
 
 local speccList = {
 	-- Fishing
-	[133755] = "Fishing",
+	[133755] = L["Fishing"],
 	-- DK
-	[128292] = "Frost",
-	[128403] = "Unholy",
-	[128402] = "Blood",
+	[128292] = L["Frost"],
+	[128403] = L["Unholy"],
+	[128402] = L["Blood"],
 	-- Druid
-	[128821] = "Guardian",
-	[128860] = "Feral",
-	[128306] = "Restoration",
-	[128858] = "Boomkin", --"Balance"
+	[128821] = L["Guardian"],
+	[128860] = L["Feral"],
+	[128306] = L["Restoration"],
+	[128858] = L["Balance"],
 	-- Paladin
-	[128823] = "Holy",
-	[120978] = "Retribution",
-	[128867] = "Protection",
+	[128823] = L["Holy"],
+	[120978] = L["Retribution"],
+	[128867] = L["Protection"],
+	-- Rogue
+	[134552] = L["Outlaw"],
+	[128870] = L["Assassination"],
+	[128476] = L["Sublety"],
+	-- DH
+	[128832] = L["Vengeance"],
+	[128829] = L["Havoc"],
+	-- Warlock
+	[128941] = L["Destruction"],
+	[128943] = L["Demonology"],
+	[128942] = L["Affliction"],
+	-- Mage
+	[128820] = L["Fire"],
+	[127528] = L["Arcane"],
+	[128862] = L["Frost"],
+	-- Priest
+	[128825] = L["Holy"],
+	[128868] = L["Discipline"],
+	[128827] = L["Shadow"],
+	-- Monk
+	[128938] = L["Brewmaster"],
+	[128937] = L["Mistweaver"],
+	[128940] = L["Windwalker"],
+	-- Warrior
+	[128908] = L["Fury"],
+	[128910] = L["Arms"],
+	[128289] = L["Protection"],
+	-- Shaman
+	[128935] = L["Elemental"],
+	[128911] = L["Restoration"],
+	[128819] = L["Enhancement"],
+	-- Hunter
+	[128861] = L["Beast Mastery"],
+	[128826] = L["Marksmanship"],	
+	[128808] = L["Survival"],
 }
 
 local eventResponseFrame = CreateFrame("Frame", "Helper")
