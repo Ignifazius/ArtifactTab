@@ -25,10 +25,12 @@ local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("ADDON_LOADED");
 	eventResponseFrame:RegisterEvent("BAG_UPDATE");
 	eventResponseFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
+	eventResponseFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+	
 	
 	
 	local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
-		if (event == "ADDON_LOADED") then
+		if (event == "PLAYER_ENTERING_WORLD") then
 			--PlayerTalentFrame_Refresh()
 			scanArtes()
 		end
@@ -98,18 +100,20 @@ end
 function createEquipedButton()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
-	name, _, quality = GetItemInfo(itemId)
-	if quality == 6 then
-		buttonArte = CreateFrame("Button",name,PlayerTalentFrame,"UIPanelButtonTemplate")
-		buttonArte:SetPoint("LEFT", lastFrame ,"RIGHT", 0, 0)
-		buttonArte:SetText(name)
-		local lng = name:len()
-		buttonArte:SetSize(lng*8,22)
-		buttonArte:SetScript("OnClick", function()
-			SocketInventoryItem(slotId)
-		end)
-		buttonArte:Show()
-		table.insert(btnList, buttonArte)
-		lastFrame = buttonArte;
+	if itemId then -- somehow the ID is nil if the player logs in
+		name, _, quality = GetItemInfo(itemId)
+		if quality == 6 then
+			buttonArte = CreateFrame("Button",name,PlayerTalentFrame,"UIPanelButtonTemplate")
+			buttonArte:SetPoint("LEFT", lastFrame ,"RIGHT", 0, 0)
+			buttonArte:SetText(name)
+			local lng = name:len()
+			buttonArte:SetSize(lng*8,22)
+			buttonArte:SetScript("OnClick", function()
+				SocketInventoryItem(slotId)
+			end)
+			buttonArte:Show()
+			table.insert(btnList, buttonArte)
+			lastFrame = buttonArte;
+		end
 	end
 end
