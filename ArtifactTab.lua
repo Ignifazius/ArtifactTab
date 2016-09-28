@@ -62,6 +62,7 @@ local speccList = {
 	-- Warrior
 	[128908] = L["Fury"],
 	[128910] = L["Arms"],
+	[128288] = L["Protection"], --off
 	[128289] = L["Protection"],
 	-- Shaman
 	[128935] = L["Elemental"],
