@@ -160,8 +160,8 @@ end
 function scanArtes()
 	--print("ping")
 	lastFrame = PlayerTalentFrameTab3
-	for container=1,5 do
-		for slot=1,32 do
+	for container=0,5 do
+		for slot=0,32 do
 			--texture, count, locked, quality, readable, lootable, link, isFiltered, hasNoValue, itemID = GetContainerItemInfo(container, slot)
 			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
 			if quality == 6 then
