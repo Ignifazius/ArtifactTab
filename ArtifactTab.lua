@@ -38,7 +38,8 @@ local speccList = {
 	[128866] = L["Protection"],
 	[128867] = L["Protection"], -- off
 	-- Rogue
-	[134552] = L["Outlaw"],
+	[128872] = L["Outlaw"],
+	--[134552] = L["Outlaw"],
 	[128870] = L["Assassination"],
 	[128476] = L["Sublety"],
 	-- DH
@@ -50,7 +51,7 @@ local speccList = {
 	[128942] = L["Affliction"],
 	-- Mage
 	[128820] = L["Fire"],
-	[127528] = L["Arcane"],
+	[127857] = L["Arcane"],
 	[128862] = L["Frost"],
 	-- Priest
 	[128825] = L["Holy"],
@@ -74,6 +75,60 @@ local speccList = {
 	[128826] = L["Marksmanship"],	
 	[128808] = L["Survival"],
 }
+
+local prioList = {
+	[133755] = 0, --["Fishing"]
+	-- DK
+	[128292] = 2, --["Frost"],
+	[128403] = 3, --["Unholy"],
+	[128402] = 1, --["Blood"],
+	-- Druid
+	[128821] = 3, --["Guardian"],
+	[128860] = 2, --["Feral"],
+	[128306] = 4, --["Restoration"],
+	[128858] = 1, --["Balance"],
+	-- Paladin
+	[128823] = 1, --["Holy"],
+	[120978] = 3, --["Retribution"],
+	[128866] = 2, --["Protection"],
+	[128867] = 2, --["Protection"], -- off
+	-- Rogue
+	[128872] = 2, --["Outlaw"],
+	[128870] = 1, --["Assassination"],
+	[128476] = 3, --["Sublety"],
+	-- DH
+	[128832] = 2, --["Vengeance"],
+	[128829] = 1, --["Havoc"],
+	-- Warlock
+	[128941] = 3, --["Destruction"],
+	[128943] = 2, --["Demonology"],
+	[128942] = 1, --["Affliction"],
+	-- Mage
+	[128820] = 2, --["Fire"],
+	[127857] = 1, --["Arcane"],
+	[128862] = 3, --["Frost"],
+	-- Priest
+	[128825] = 2, --["Holy"],
+	[128868] = 1, --["Discipline"],
+	[128827] = 3, --["Shadow"],
+	-- Monk
+	[128938] = 1, --["Brewmaster"],
+	[128937] = 2, --["Mistweaver"],
+	[128940] = 3, --["Windwalker"],
+	-- Warrior
+	[128908] = 2, --["Fury"],
+	[128910] = 1, --["Arms"],
+	[128288] = 3, --["Protection"], --off
+	[128289] = 3, --["Protection"],
+	-- Shaman
+	[128935] = 1, --["Elemental"],
+	[128911] = 3, --["Restoration"],
+	[128819] = 2, --["Enhancement"],
+	-- Hunter
+	[128861] = 1, --["Beast Mastery"],
+	[128826] = 2, --["Marksmanship"],	
+	[128808] = 3, --["Survival"],
+}	
 
 local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("ADDON_LOADED");
@@ -120,16 +175,26 @@ function scanArtes()
 end
 
 function createArteButton(name, container, slot)
-	buttonArte = createButton(name, lastFrame)
+	local buttonArte = createButton(name, lastFrame)
 	buttonArte:SetScript("OnClick", function()
 		SocketContainerItem(container, slot)
 	end)
 	buttonArte:Show()
-	--PanelTemplates_TabResize(buttonArte, 0);
-	--print(PanelTemplates_GetTabWidth(buttonArte))
+	buttonArte.previousFrame = lastFrame
 	table.insert(btnList, buttonArte)
 	lastFrame = buttonArte;
 end
+
+function createArteContainer(con, sl, id)
+	local arte = {
+		["slot"] = sl,
+		["container"] = con,
+		["id"] = id,
+		["priority"] = priolist[id] -- best way, using the same priority like the talent tree?
+	}
+	return arte
+end
+
 
 function createButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)

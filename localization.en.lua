@@ -1,4 +1,4 @@
-local _ L = ...;
+local _, L = ...;
 if ((GetLocale() == "enUS") or (GetLocale() == "enGB")) then
 	L["Fishing"] = "Fishing"
 	-- DK
@@ -11,7 +11,7 @@ if ((GetLocale() == "enUS") or (GetLocale() == "enGB")) then
 	L["Restoration"] = "Restoration"
 	L["Balance"] = "Boomkin" --"Balance"
 	-- Paladin
-	["Holy"] = "Holy"
+	L["Holy"] = "Holy"
 	L["Retribution"] = "Retribution"
 	L["Protection"] = "Protection"
 	-- Rogue
