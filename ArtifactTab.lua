@@ -35,7 +35,8 @@ local speccList = {
 	-- Paladin
 	[128823] = L["Holy"],
 	[120978] = L["Retribution"],
-	[128867] = L["Protection"],
+	[128866] = L["Protection"],
+	[128867] = L["Protection"], -- off
 	-- Rogue
 	[134552] = L["Outlaw"],
 	[128870] = L["Assassination"],
