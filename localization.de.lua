@@ -47,7 +47,7 @@ if GetLocale() == "deDE" then
 	L["Enhancement"] = "Verstärkung"
 	-- Hunter
 	L["Beast Mastery"] = "Tierherrschaft"
-	L["Marksmanship"] = "Treffsicherheit",
+	L["Marksmanship"] = "Treffsicherheit"
 	L["Survival"] = "Überleben"
 end
 
