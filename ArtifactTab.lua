@@ -151,6 +151,28 @@ function createButton(name, frame)
 	return b
 end
 
+function createEqButton(name, frame)
+	local b = CreateFrame("Button",name,PlayerTalentFrame)
+	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
+	bFontString = b:CreateFontString()
+	bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	bFontString:SetText(arteToSpecc(name))
+	--bFontString:SetAllPoints(b)
+	bFontString:SetPoint("TOP", b ,"TOP", 0, -30)
+	b:SetFontString(bFontString)
+	b:SetSize(bFontString:GetWidth()+30,60)--*1.4
+	local texture = b:CreateTexture()
+	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
+	texture:SetPoint("TOP", b ,"TOP", 0, -15)
+	texture:SetPoint("LEFT", b ,"LEFT", 0, 0)
+	texture:SetPoint("RIGHT", b ,"RIGHT", 0, 0)
+	texture:SetPoint("BOTTOM", b ,"BOTTOM", 0, -15)
+	--texture:SetAllPoints(b)
+	b:SetNormalTexture(texture)
+	b:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+	return b
+end
+
 function getEquipedItemID()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
@@ -168,8 +190,10 @@ function createEquipedButton()
 	if itemId then -- somehow the ID is nil if the player logs in
 		name, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
-			buttonArte = createButton(itemId, lastFrame) --name
-			buttonArte:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
+			buttonArte = createEqButton(itemId, lastFrame) --name
+			--buttonArte:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
+			--buttonArte:SetSize(bFontString:GetWidth()+30,60)--*1.4
+			--buttonArte:SetPoint("LEFT", lastFrame ,"RIGHT", -5, -30)
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
 			end)
