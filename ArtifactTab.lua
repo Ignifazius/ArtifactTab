@@ -19,116 +19,63 @@ local _, L = ...;
 local btnPos = 0
 local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
+local arteList = {}
 
 local speccList = {
 	-- Fishing
-	[133755] = L["Fishing"],
-	-- DK
-	[128292] = L["Frost"],
-	[128403] = L["Unholy"],
-	[128402] = L["Blood"],
-	-- Druid
-	[128821] = L["Guardian"],
-	[128860] = L["Feral"],
-	[128306] = L["Restoration"],
-	[128858] = L["Balance"],
+	[133755] = {["name"] = L["Fishing"], ["priority"] = 0},
+	-- DK	
+	[128402] = {["name"] = L["Blood"],["priority"] = 1},
+	[128403] = {["name"] = L["Unholy"],["priority"] = 2}, 
+	[128292] = {["name"] = L["Frost"],["priority"] = 3}, 
+	-- Druid	
+	[128858] = {["name"] = L["Balance"],["priority"] = 1}, 
+	[128860] = {["name"] = L["Feral"],["priority"] = 2}, 
+	[128821] = {["name"] = L["Guardian"],["priority"] = 3}, 
+	[128306] = {["name"] = L["Restoration"],["priority"] = 4},	
 	-- Paladin
-	[128823] = L["Holy"],
-	[120978] = L["Retribution"],
-	[128866] = L["Protection"],
-	[128867] = L["Protection"], -- off
+	[128823] = {["name"] = L["Holy"],["priority"] = 1},
+	[128867] = {["name"] = L["Protection"],["priority"] = 2}, 
+	[128866] = {["name"] = L["Protection"],["priority"] = 2}, 
+	[120978] = {["name"] = L["Retribution"],["priority"] = 3}, 	
 	-- Rogue
-	[128872] = L["Outlaw"],
-	--[134552] = L["Outlaw"],
-	[128870] = L["Assassination"],
-	[128476] = L["Sublety"],
+	[128870] = {["name"] = L["Assassination"],["priority"] = 1}, 
+	[128872] = {["name"] = L["Outlaw"],["priority"] = 2}, 
+	--[134552] = L["Outlaw"],	
+	[128476] = {["name"] = L["Sublety"],["priority"] = 3}, 
 	-- DH
-	[128832] = L["Vengeance"],
-	[128829] = L["Havoc"],
+	[128829] = {["name"] = L["Havoc"],["priority"] = 1}, 
+	[128832] = {["name"] = L["Vengeance"],["priority"] = 2}, 	
 	-- Warlock
-	[128941] = L["Destruction"],
-	[128943] = L["Demonology"],
-	[128942] = L["Affliction"],
+	[128942] = {["name"] = L["Affliction"],	["priority"] = 1}, 
+	[128943] = {["name"] = L["Demonology"],["priority"] = 2}, 
+	[128941] = {["name"] = L["Destruction"],["priority"] = 3}, 
 	-- Mage
-	[128820] = L["Fire"],
-	[127857] = L["Arcane"],
-	[128862] = L["Frost"],
+	[127857] = {["name"] = L["Arcane"],["priority"] = 1}, 
+	[128820] = {["name"] = L["Fire"],["priority"] = 2}, 
+	[128862] = {["name"] = L["Frost"],["priority"] = 3}, 
 	-- Priest
-	[128825] = L["Holy"],
-	[128868] = L["Discipline"],
-	[128827] = L["Shadow"],
+	[128868] = {["name"] = L["Discipline"],["priority"] = 1},
+	[128825] = {["name"] = L["Holy"],["priority"] = 2}, 
+	[128827] = {["name"] = L["Shadow"],["priority"] = 3}, 
 	-- Monk
-	[128938] = L["Brewmaster"],
-	[128937] = L["Mistweaver"],
-	[128940] = L["Windwalker"],
+	[128938] = {["name"] = L["Brewmaster"],["priority"] = 1}, 
+	[128937] = {["name"] = L["Mistweaver"],["priority"] = 2},
+	[128940] = {["name"] = L["Windwalker"],["priority"] = 3}, 
 	-- Warrior
-	[128908] = L["Fury"],
-	[128910] = L["Arms"],
-	[128288] = L["Protection"], --off
-	[128289] = L["Protection"],
+	[128910] = {["name"] = L["Arms"],["priority"] = 1}, 
+	[128908] = {["name"] = L["Fury"],["priority"] = 2}, 
+	[128288] = {["name"] = L["Protection"],["priority"] = 3}, 
+	[128289] = {["name"] = L["Protection"],["priority"] = 3}, 
 	-- Shaman
-	[128935] = L["Elemental"],
-	[128911] = L["Restoration"],
-	[128819] = L["Enhancement"],
+	[128935] = {["name"] = L["Elemental"],["priority"] = 1}, 
+	[128819] = {["name"] = L["Enhancement"],["priority"] = 2}, 
+	[128911] = {["name"] = L["Restoration"],["priority"] = 3}, 
 	-- Hunter
-	[128861] = L["Beast Mastery"],
-	[128826] = L["Marksmanship"],	
-	[128808] = L["Survival"],
+	[128861] = {["name"] = L["Beast Mastery"],["priority"] = 1}, 
+	[128826] = {["name"] = L["Marksmanship"],["priority"] = 2}, 	
+	[128808] = {["name"] = L["Survival"],["priority"] = 3}
 }
-
-local prioList = {
-	[133755] = 0, --["Fishing"]
-	-- DK
-	[128292] = 2, --["Frost"],
-	[128403] = 3, --["Unholy"],
-	[128402] = 1, --["Blood"],
-	-- Druid
-	[128821] = 3, --["Guardian"],
-	[128860] = 2, --["Feral"],
-	[128306] = 4, --["Restoration"],
-	[128858] = 1, --["Balance"],
-	-- Paladin
-	[128823] = 1, --["Holy"],
-	[120978] = 3, --["Retribution"],
-	[128866] = 2, --["Protection"],
-	[128867] = 2, --["Protection"], -- off
-	-- Rogue
-	[128872] = 2, --["Outlaw"],
-	[128870] = 1, --["Assassination"],
-	[128476] = 3, --["Sublety"],
-	-- DH
-	[128832] = 2, --["Vengeance"],
-	[128829] = 1, --["Havoc"],
-	-- Warlock
-	[128941] = 3, --["Destruction"],
-	[128943] = 2, --["Demonology"],
-	[128942] = 1, --["Affliction"],
-	-- Mage
-	[128820] = 2, --["Fire"],
-	[127857] = 1, --["Arcane"],
-	[128862] = 3, --["Frost"],
-	-- Priest
-	[128825] = 2, --["Holy"],
-	[128868] = 1, --["Discipline"],
-	[128827] = 3, --["Shadow"],
-	-- Monk
-	[128938] = 1, --["Brewmaster"],
-	[128937] = 2, --["Mistweaver"],
-	[128940] = 3, --["Windwalker"],
-	-- Warrior
-	[128908] = 2, --["Fury"],
-	[128910] = 1, --["Arms"],
-	[128288] = 3, --["Protection"], --off
-	[128289] = 3, --["Protection"],
-	-- Shaman
-	[128935] = 1, --["Elemental"],
-	[128911] = 3, --["Restoration"],
-	[128819] = 2, --["Enhancement"],
-	-- Hunter
-	[128861] = 1, --["Beast Mastery"],
-	[128826] = 2, --["Marksmanship"],	
-	[128808] = 3, --["Survival"],
-}	
 
 local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("ADDON_LOADED");
@@ -137,41 +84,35 @@ local eventResponseFrame = CreateFrame("Frame", "Helper")
 	--eventResponseFrame:RegisterEvent("PLAYER_ENTERING_WORLD");		
 	
 local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
-	if (event == "ADDON_LOADED") then
+	if (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED" or event == "ADDON_LOADED") then
+		clearLists()
 		scanArtes()
-	end
-	if (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED") then
-		clearList()
-		scanArtes()
+		createSortedButtons()
 	end
 end
 
 eventResponseFrame:SetScript("OnEvent", eventHandler);
 
-
-function clearList()
+function clearLists()
 	for i=1,#btnList do
 		btnList[i]:Hide()
 	end
 	btnList = {}
+	arteList = {}
 end
 
-
 function scanArtes()
-	--print("ping")
 	lastFrame = PlayerTalentFrameTab3
 	for container=0,5 do
 		for slot=0,32 do
-			--texture, count, locked, quality, readable, lootable, link, isFiltered, hasNoValue, itemID = GetContainerItemInfo(container, slot)
 			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
 			if quality == 6 then
 				name = GetItemInfo(itemID)
-				--print(container.." "..slot.." "..name.." "..quality)
-				createArteButton(itemID, container, slot) --name
+				table.insert(arteList, createArteContainer("bag", container, slot, itemID))
 			end			
 		end
 	end
-	createEquipedButton()
+	table.insert(arteList, createArteContainer("equipped", nil, nil, getEquipedItemID()))
 end
 
 function createArteButton(name, container, slot)
@@ -185,16 +126,16 @@ function createArteButton(name, container, slot)
 	lastFrame = buttonArte;
 end
 
-function createArteContainer(con, sl, id)
+function createArteContainer(typ, con, sl, id)
 	local arte = {
+		["type"] = typ,
 		["slot"] = sl,
 		["container"] = con,
 		["id"] = id,
-		["priority"] = priolist[id] -- best way, using the same priority like the talent tree?
+		["priority"] = speccList[id]["priority"], -- best way, using the same priority like the talent tree?
 	}
 	return arte
 end
-
 
 function createButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
@@ -210,13 +151,25 @@ function createButton(name, frame)
 	return b
 end
 
+function getEquipedItemID()
+	local slotId = GetInventorySlotInfo("MainHandSlot")
+	local itemId = GetInventoryItemID("player", slotId)
+	if itemId then -- somehow the ID is nil if the player logs in
+		name, _, quality = GetItemInfo(itemId)
+		if quality == 6 then
+			return itemId
+		end
+	end
+end
+
 function createEquipedButton()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
 	if itemId then -- somehow the ID is nil if the player logs in
 		name, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
-			buttonArte = createButton(itemId, lastFrame) --name		
+			buttonArte = createButton(itemId, lastFrame) --name
+			buttonArte:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
 			end)
@@ -227,8 +180,22 @@ function createEquipedButton()
 	end
 end
 
+function createSortedButtons()
+	for i=0,#arteList do -- 0 for fishing
+		for j=1, #arteList do
+			if arteList[j]["priority"] == i then
+				if arteList[j]["type"] == "bag" then
+					createArteButton(arteList[j]["id"], arteList[j]["container"], arteList[j]["slot"])
+				elseif arteList[j]["type"] == "equipped" then
+					createEquipedButton()
+				end
+			end
+		end
+	end
+end
+
 function arteToSpecc(id)
-	local retID = speccList[id]
+	local retID = speccList[id]["name"]
 	if retID == nil then
 		name = GetItemInfo(id)
 		return name 
