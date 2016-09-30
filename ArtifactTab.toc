@@ -1,5 +1,5 @@
 ## Title: ArtifactTab
-## Version: 0.4
+## Version: 1.0
 ## Author: Ignifazius
 ## Interface: 70000
 

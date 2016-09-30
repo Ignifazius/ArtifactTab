@@ -111,7 +111,7 @@ function scanArtes()
 	for container=0,5 do
 		for slot=0,32 do
 			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
-			if quality == 6 then
+			if quality == 6 and itemID ~= 139390 then -- Artifact research note
 				name = GetItemInfo(itemID)
 				table.insert(arteList, createArteContainer("bag", container, slot, itemID))
 			end			
