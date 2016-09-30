@@ -102,7 +102,12 @@ function clearLists()
 end
 
 function scanArtes()
-	lastFrame = PlayerTalentFrameTab3
+	_, _, classIndex = UnitClass("player");
+	if classIndex == 3 then -- hunter
+		lastFrame = PlayerTalentFrameTab4
+	else
+		lastFrame = PlayerTalentFrameTab3
+	end
 	for container=0,5 do
 		for slot=0,32 do
 			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
@@ -112,7 +117,10 @@ function scanArtes()
 			end			
 		end
 	end
-	table.insert(arteList, createArteContainer("equipped", nil, nil, getEquipedItemID()))
+	local equippedID = getEquippedItemID()
+	if equippedID ~= nil then -- somehow this info is not availabe directly after login... -.-
+		table.insert(arteList, createArteContainer("equipped", nil, nil, equippedID))
+	end
 end
 
 function createArteButton(name, container, slot)
@@ -173,7 +181,7 @@ function createEqButton(name, frame)
 	return b
 end
 
-function getEquipedItemID()
+function getEquippedItemID()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
 	if itemId then -- somehow the ID is nil if the player logs in
