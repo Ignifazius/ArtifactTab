@@ -45,7 +45,8 @@ local speccList = {
 	[128476] = {["name"] = L["Sublety"],["priority"] = 3}, 
 	-- DH
 	[128829] = {["name"] = L["Havoc"],["priority"] = 1}, 
-	[128832] = {["name"] = L["Vengeance"],["priority"] = 2}, 	
+	[128832] = {["name"] = L["Vengeance"],["priority"] = 2}, 
+	[128831] = {["name"] = L["Vengeance"],["priority"] = 2}, -- off	
 	-- Warlock
 	[128942] = {["name"] = L["Affliction"],	["priority"] = 1}, 
 	[128943] = {["name"] = L["Demonology"],["priority"] = 2}, 
@@ -71,6 +72,7 @@ local speccList = {
 	[128935] = {["name"] = L["Elemental"],["priority"] = 1}, 
 	[128819] = {["name"] = L["Enhancement"],["priority"] = 2}, 
 	[128911] = {["name"] = L["Restoration"],["priority"] = 3}, 
+	[128934] = {["name"] = L["Restoration"],["priority"] = 3}, --off
 	-- Hunter
 	[128861] = {["name"] = L["Beast Mastery"],["priority"] = 1}, 
 	[128826] = {["name"] = L["Marksmanship"],["priority"] = 2}, 	
@@ -85,15 +87,15 @@ local eventResponseFrame = CreateFrame("Frame", "Helper")
 	
 local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
 	if (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED" or event == "ADDON_LOADED") then
-		clearLists()
-		scanArtes()
-		createSortedButtons()
+		ArtifactTab_clearLists()
+		ArtifactTab_scanArtes()
+		ArtifactTab_createSortedButtons()
 	end
 end
 
 eventResponseFrame:SetScript("OnEvent", eventHandler);
 
-function clearLists()
+function ArtifactTab_clearLists()
 	for i=1,#btnList do
 		btnList[i]:Hide()
 	end
@@ -101,7 +103,7 @@ function clearLists()
 	arteList = {}
 end
 
-function scanArtes()
+function ArtifactTab_scanArtes()
 	_, _, classIndex = UnitClass("player");
 	if classIndex == 3 then -- hunter
 		lastFrame = PlayerTalentFrameTab4
@@ -113,18 +115,18 @@ function scanArtes()
 			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
 			if quality == 6 and itemID ~= 139390 then -- Artifact research note
 				name = GetItemInfo(itemID)
-				table.insert(arteList, createArteContainer("bag", container, slot, itemID))
+				table.insert(arteList, ArtifactTab_createArteContainer("bag", container, slot, itemID))
 			end			
 		end
 	end
-	local equippedID = getEquippedItemID()
+	local equippedID = ArtifactTab_getEquippedItemID()
 	if equippedID ~= nil then -- somehow this info is not availabe directly after login... -.-
-		table.insert(arteList, createArteContainer("equipped", nil, nil, equippedID))
+		table.insert(arteList, ArtifactTab_createArteContainer("equipped", nil, nil, equippedID))
 	end
 end
 
-function createArteButton(name, container, slot)
-	local buttonArte = createButton(name, lastFrame)
+function ArtifactTab_createArteButton(name, container, slot)
+	local buttonArte = ArtifactTab_createButton(name, lastFrame)
 	buttonArte:SetScript("OnClick", function()
 		SocketContainerItem(container, slot)
 	end)
@@ -134,7 +136,7 @@ function createArteButton(name, container, slot)
 	lastFrame = buttonArte;
 end
 
-function createArteContainer(typ, con, sl, id)
+function ArtifactTab_createArteContainer(typ, con, sl, id)
 	local arte = {
 		["type"] = typ,
 		["slot"] = sl,
@@ -145,12 +147,12 @@ function createArteContainer(typ, con, sl, id)
 	return arte
 end
 
-function createButton(name, frame)
+function ArtifactTab_createButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
 	bFontString = b:CreateFontString()
 	bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-	bFontString:SetText(arteToSpecc(name))
+	bFontString:SetText(ArtifactTab_arteToSpecc(name))
 	bFontString:SetAllPoints(b)
 	b:SetFontString(bFontString)
 	b:SetSize(bFontString:GetWidth()+30,30)--*1.4
@@ -159,12 +161,12 @@ function createButton(name, frame)
 	return b
 end
 
-function createEqButton(name, frame)
+function ArtifactTab_createEqButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
 	bFontString = b:CreateFontString()
 	bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-	bFontString:SetText(arteToSpecc(name))
+	bFontString:SetText(ArtifactTab_arteToSpecc(name))
 	--bFontString:SetAllPoints(b)
 	bFontString:SetPoint("TOP", b ,"TOP", 0, -30)
 	b:SetFontString(bFontString)
@@ -181,7 +183,7 @@ function createEqButton(name, frame)
 	return b
 end
 
-function getEquippedItemID()
+function ArtifactTab_getEquippedItemID()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
 	if itemId then -- somehow the ID is nil if the player logs in
@@ -192,16 +194,13 @@ function getEquippedItemID()
 	end
 end
 
-function createEquipedButton()
+function ArtifactTab_createEquipedButton()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
 	if itemId then -- somehow the ID is nil if the player logs in
 		name, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
-			buttonArte = createEqButton(itemId, lastFrame) --name
-			--buttonArte:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
-			--buttonArte:SetSize(bFontString:GetWidth()+30,60)--*1.4
-			--buttonArte:SetPoint("LEFT", lastFrame ,"RIGHT", -5, -30)
+			buttonArte = ArtifactTab_createEqButton(itemId, lastFrame) --name
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
 			end)
@@ -212,21 +211,21 @@ function createEquipedButton()
 	end
 end
 
-function createSortedButtons()
-	for i=0,#arteList do -- 0 for fishing
-		for j=1, #arteList do
-			if arteList[j]["priority"] == i then
+function ArtifactTab_createSortedButtons()
+	for i=0,4 do -- 0 for fishing 0-4 -> 5 priorities, nobody has more than 5 artifacts
+		for j=1, #arteList do 
+			if arteList[j] ~= nil and arteList[j]["priority"] == i then
 				if arteList[j]["type"] == "bag" then
-					createArteButton(arteList[j]["id"], arteList[j]["container"], arteList[j]["slot"])
+					ArtifactTab_createArteButton(arteList[j]["id"], arteList[j]["container"], arteList[j]["slot"])
 				elseif arteList[j]["type"] == "equipped" then
-					createEquipedButton()
+					ArtifactTab_createEquipedButton()
 				end
 			end
 		end
 	end
 end
 
-function arteToSpecc(id)
+function ArtifactTab_arteToSpecc(id)
 	local retID = speccList[id]["name"]
 	if retID == nil then
 		name = GetItemInfo(id)

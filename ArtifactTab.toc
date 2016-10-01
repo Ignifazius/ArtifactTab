@@ -1,8 +1,9 @@
 ## Title: ArtifactTab
-## Version: 1.0
+## Version: 1.1
 ## Author: Ignifazius
 ## Interface: 70000
-
+## Notes: Adds tabs for your artifacts to the talent screen.
+## Notes-deDE: Fügt weitere Reiter für die Artefakte zur Talentübersicht hinzu.
 
 localization.core.lua
 localization.de.lua
