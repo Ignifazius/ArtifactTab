@@ -44,8 +44,8 @@ local speccList = {
 	--[134552] = L["Outlaw"],	
 	[128476] = {["name"] = L["Sublety"],["priority"] = 3}, 
 	-- DH
-	[128729] = {["name"] = L["Havoc"],["priority"] = 1}, 
-	[128730] = {["name"] = L["Havoc"],["priority"] = 1}, --off
+	[127829] = {["name"] = L["Havoc"],["priority"] = 1}, 
+	[127830] = {["name"] = L["Havoc"],["priority"] = 1}, --off
 	[128832] = {["name"] = L["Vengeance"],["priority"] = 2}, 
 	[128831] = {["name"] = L["Vengeance"],["priority"] = 2}, --off	
 	-- Warlock
