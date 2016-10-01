@@ -50,8 +50,9 @@ local speccList = {
 	[128831] = {["name"] = L["Vengeance"],["priority"] = 2}, --off	
 	-- Warlock
 	[128942] = {["name"] = L["Affliction"],	["priority"] = 1}, 
-	[128943] = {["name"] = L["Demonology"],["priority"] = 2}, 
-	[128941] = {["name"] = L["Destruction"],["priority"] = 3}, 
+	[128943] = {["name"] = L["Demonology"],["priority"] = 2},  --off	
+	[137246] = {["name"] = L["Demonology"],["priority"] = 2},
+	[128941] = {["name"] = L["Destruction"],["priority"] = 3},
 	-- Mage
 	[127857] = {["name"] = L["Arcane"],["priority"] = 1}, 
 	[128820] = {["name"] = L["Fire"],["priority"] = 2}, 
