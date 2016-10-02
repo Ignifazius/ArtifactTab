@@ -1,5 +1,5 @@
-## Title: ArtifactTab
-## Version: 1.1.3
+## Title: |cffF5B800ArtifactTab|r
+## Version: 1.2
 ## Author: Ignifazius
 ## Interface: 70000
 ## Notes: Adds tabs for your artifacts to the talent screen.

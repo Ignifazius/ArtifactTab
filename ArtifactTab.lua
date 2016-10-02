@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]	
 local _, L = ...;
+local ArtifactTabDebug = true;
+local initScan = true
 local btnPos = 0
 local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
@@ -85,17 +87,21 @@ local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("ADDON_LOADED");
 	eventResponseFrame:RegisterEvent("BAG_UPDATE");
 	eventResponseFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
-	--eventResponseFrame:RegisterEvent("PLAYER_ENTERING_WORLD");		
+	
 	
 local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
-	if (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED" or event == "ADDON_LOADED") then
+	if (event == "ADDON_LOADED" and arg1 == "Blizzard_TalentUI") then
 		ArtifactTab_clearLists()
 		ArtifactTab_scanArtes()
 		ArtifactTab_createSortedButtons()
+	elseif (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED") then
+		ArtifactTab_checkIFUpdateIsNeeded()
+		--print(event.." "..arg1)
 	end
 end
 
 eventResponseFrame:SetScript("OnEvent", eventHandler);
+
 
 function ArtifactTab_clearLists()
 	for i=1,#btnList do
@@ -124,6 +130,74 @@ function ArtifactTab_scanArtes()
 	local equippedID = ArtifactTab_getEquippedItemID()
 	if equippedID ~= nil then -- somehow this info is not availabe directly after login... -.-
 		table.insert(arteList, ArtifactTab_createArteContainer("equipped", nil, nil, equippedID))
+	end
+end
+
+function countArtes()
+	local count = 0
+	for container=0,5 do
+		for slot=0,32 do
+			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
+			if quality == 6 and itemID ~= 139390 then -- Artifact research note
+				count = count+1
+			end			
+		end
+	end
+	local eqID = ArtifactTab_getEquippedItemID()
+	_, _, quality = GetItemInfo(eqID)
+	if eqID ~= nil and quality == 6 then
+		count = count+1
+		--print(eqID)
+	end
+	return count
+end
+
+function ArtifactTab_updateAllButtons()
+	for i=1,#btnList do
+		
+	end	
+end
+
+function ArtifactTab_checkIFUpdateIsNeeded()
+	local updateRequired = false
+	if #arteList ~= countArtes() then
+		updateRequired = true
+	else
+		for container=0,5 do
+			for slot=0,32 do
+				_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
+				if quality == 6 and itemID ~= 139390 then -- Artifact research note
+					name = GetItemInfo(itemID)
+					for i=1, #arteList do 
+						if arteList[i]["id"] == itemID then
+							if arteList[i]["type"] == "bag" then
+								if arteList[i]["slot"] == slot and arteList[i]["container"] == container then						
+									--print("(inv) no update needed")
+								else
+									--print("(inv) update needed")
+									updateRequired = true
+								end
+							elseif arteList[i]["type"] == "equipped" then
+								if arteList[i]["id"] == ArtifactTab_getEquippedItemID() then
+									--print("(eq) no update needed")
+								else
+									--print("(eq) update needed")
+									updateRequired = true
+								end					
+							end
+						end
+					end
+				end			
+			end
+		end
+	end
+	if updateRequired then
+		--print("updating...")
+		-- pretty sure there is a better solution than this lazy hotfix
+		ArtifactTab_clearLists()
+		ArtifactTab_scanArtes()
+		ArtifactTab_createSortedButtons()
+		-- end of "lazy hotfix"
 	end
 end
 
@@ -160,8 +234,37 @@ function ArtifactTab_createButton(name, frame)
 	b:SetSize(bFontString:GetWidth()+30,30)--*1.4
 	b:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
 	b:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+	--print(b.bFontString:GetText())
 	return b
 end
+
+function ArtifactTab_updateButton(frame, b, name)
+	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
+	bFontString = b:GetFrontString()
+	--bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	bFontString:SetText(ArtifactTab_arteToSpecc(name))
+	bFontString:SetAllPoints(b)
+	b:SetSize(bFontString:GetWidth()+30,30)--*1.4
+	b:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
+	b:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+end
+
+function ArtifactTab_setINVButton(button)
+	button:SetSize(button:GetFontString():GetWidth()+30,30)--*1.4
+end
+
+function ArtifactTab_setEQButton(button)
+	button:SetSize(button:GetFontString():GetWidth()+30,60)--*1.4
+	local texture = button:GetNormalTexture()
+	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
+	texture:SetPoint("TOP", b ,"TOP", 0, -15)
+	texture:SetPoint("LEFT", b ,"LEFT", 0, 0)
+	texture:SetPoint("RIGHT", b ,"RIGHT", 0, 0)
+	texture:SetPoint("BOTTOM", b ,"BOTTOM", 0, -15)
+	button:SetNormalTexture(texture) --needed?
+	--button:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+end
+
 
 function ArtifactTab_createEqButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
