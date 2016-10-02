@@ -144,10 +144,12 @@ function countArtes()
 		end
 	end
 	local eqID = ArtifactTab_getEquippedItemID()
-	_, _, quality = GetItemInfo(eqID)
-	if eqID ~= nil and quality == 6 then
-		count = count+1
-		--print(eqID)
+	if eqID ~= nil then
+		_, _, quality = GetItemInfo(eqID)
+		if quality == 6 then
+			count = count+1
+			--print(eqID)
+		end
 	end
 	return count
 end
