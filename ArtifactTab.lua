@@ -37,7 +37,7 @@ local speccList = {
 	[128306] = {["name"] = L["Restoration"],["priority"] = 4},	
 	-- Paladin
 	[128823] = {["name"] = L["Holy"],["priority"] = 1},
-	[128867] = {["name"] = L["Protection"],["priority"] = 2}, 
+	[128867] = {["name"] = L["Protection"],["priority"] = 2}, --off
 	[128866] = {["name"] = L["Protection"],["priority"] = 2}, 
 	[120978] = {["name"] = L["Retribution"],["priority"] = 3}, 	
 	-- Rogue
@@ -71,7 +71,7 @@ local speccList = {
 	[128910] = {["name"] = L["Arms"],["priority"] = 1}, 
 	[128908] = {["name"] = L["Fury"],["priority"] = 2}, 
 	[128288] = {["name"] = L["Protection"],["priority"] = 3}, 
-	[128289] = {["name"] = L["Protection"],["priority"] = 3}, 
+	[128289] = {["name"] = L["Protection"],["priority"] = 3}, --off
 	-- Shaman
 	[128935] = {["name"] = L["Elemental"],["priority"] = 1}, 
 	[128819] = {["name"] = L["Enhancement"],["priority"] = 2}, 
@@ -170,9 +170,12 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 				_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
 				if quality == 6 and itemID ~= 139390 then -- Artifact research note
 					name = GetItemInfo(itemID)
+					--print(#arteList)
 					for i=1, #arteList do 
-						if arteList[i]["id"] == itemID then
+						if arteList[i]["id"] == ArtifactTab_getMainhandArtifactID(itemID) then
+							--print(arteList[i]["type"])
 							if arteList[i]["type"] == "bag" then
+							--print(arteList[i]["slot"].. " "..slot.." | "..arteList[i]["container"].." "..container)
 								if arteList[i]["slot"] == slot and arteList[i]["container"] == container then						
 									--print("(inv) no update needed")
 								else
@@ -180,6 +183,7 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 									updateRequired = true
 								end
 							elseif arteList[i]["type"] == "equipped" then
+								--print(arteList[i]["id"].." "..ArtifactTab_getEquippedItemID())
 								if arteList[i]["id"] == ArtifactTab_getEquippedItemID() then
 									--print("(eq) no update needed")
 								else
@@ -200,6 +204,18 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 		ArtifactTab_scanArtes()
 		ArtifactTab_createSortedButtons()
 		-- end of "lazy hotfix"
+	end
+end
+
+function ArtifactTab_getMainhandArtifactID(id)
+	if id == 128289 then -- prot warrior
+		return 128288
+	elseif id == 128943 then --demo lock
+		return 137246
+	elseif id == 128866 then --prot pala
+		return 128867
+	else
+		return id
 	end
 end
 
@@ -267,6 +283,19 @@ function ArtifactTab_setEQButton(button)
 	--button:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
 end
 
+function ArtifactTab_updateButtonSkins(button)
+	for i=1,#btnList do
+		btnList[i]:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
+	end
+	button:SetSize(button:GetFontString():GetWidth()+30,60)--*1.4
+	local texture = button:GetNormalTexture()
+	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
+	texture:SetPoint("TOP", b ,"TOP", 0, -15)
+	texture:SetPoint("LEFT", b ,"LEFT", 0, 0)
+	texture:SetPoint("RIGHT", b ,"RIGHT", 0, 0)
+	texture:SetPoint("BOTTOM", b ,"BOTTOM", 0, -15)
+	button:SetNormalTexture(texture)
+end
 
 function ArtifactTab_createEqButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
