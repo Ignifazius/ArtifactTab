@@ -148,7 +148,6 @@ function countArtes()
 		_, _, quality = GetItemInfo(eqID)
 		if quality == 6 then
 			count = count+1
-			--print(eqID)
 		end
 	end
 	return count
@@ -219,16 +218,6 @@ function ArtifactTab_getMainhandArtifactID(id)
 	end
 end
 
-function ArtifactTab_createArteButton(name, container, slot)
-	local buttonArte = ArtifactTab_createButton(name, lastFrame)
-	buttonArte:SetScript("OnClick", function()
-		SocketContainerItem(container, slot)
-	end)
-	buttonArte:Show()
-	buttonArte.previousFrame = lastFrame
-	table.insert(btnList, buttonArte)
-	lastFrame = buttonArte;
-end
 
 function ArtifactTab_createArteContainer(typ, con, sl, id)
 	local arte = {
@@ -241,6 +230,46 @@ function ArtifactTab_createArteContainer(typ, con, sl, id)
 	return arte
 end
 
+function ArtifactTab_setActiveButton(button)
+	for i=1,#btnList do
+		btnList[i]:SetSize(btnList[i]:GetFontString():GetWidth(),30)
+		local textureN = btnList[i]:GetNormalTexture()
+		textureN:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
+		btnList[i]:SetNormalTexture(textureN)
+		textureN:SetAllPoints(btnList[i])
+		local highTexN = btnList[i]:GetHighlightTexture()
+		highTexN:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+		btnList[i]:SetHighlightTexture(highTexN)
+		highTexN:SetAllPoints(btnList[i])
+		highTexN:SetPoint("TOP", button ,"TOP", 0, -10)		
+	end
+	button:SetSize(button:GetFontString():GetWidth(),30)
+	local texture = button:GetNormalTexture()
+	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
+	texture:SetPoint("TOP", button ,"TOP", 0, -15)
+	texture:SetPoint("LEFT", button ,"LEFT", 0, 0)
+	texture:SetPoint("RIGHT", button ,"RIGHT", 0, 0)
+	texture:SetPoint("BOTTOM", button ,"BOTTOM", 0, -25)
+	button:SetNormalTexture(texture)
+	local highTexN = button:GetHighlightTexture()
+	highTexN:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+	button:SetHighlightTexture(highTexN)
+	highTexN:SetAllPoints(button)
+	highTexN:SetPoint("BOTTOM", button ,"BOTTOM", 0, -5)
+end
+
+function ArtifactTab_createArteButton(name, container, slot)
+	local buttonArte = ArtifactTab_createButton(name, lastFrame)
+	buttonArte:SetScript("OnClick", function()
+		SocketContainerItem(container, slot)
+		ArtifactTab_setActiveButton(buttonArte)
+	end)
+	buttonArte:Show()
+	buttonArte.previousFrame = lastFrame
+	table.insert(btnList, buttonArte)
+	lastFrame = buttonArte;
+end
+
 function ArtifactTab_createButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
@@ -250,72 +279,14 @@ function ArtifactTab_createButton(name, frame)
 	bFontString:SetAllPoints(b)
 	b:SetFontString(bFontString)
 	b:SetSize(bFontString:GetWidth()+30,30)--*1.4
-	b:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
-	b:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
-	--print(b.bFontString:GetText())
-	return b
-end
-
-function ArtifactTab_updateButton(frame, b, name)
-	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
-	bFontString = b:GetFrontString()
-	--bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-	bFontString:SetText(ArtifactTab_arteToSpecc(name))
-	bFontString:SetAllPoints(b)
-	b:SetSize(bFontString:GetWidth()+30,30)--*1.4
-	b:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
-	b:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
-end
-
-function ArtifactTab_setINVButton(button)
-	button:SetSize(button:GetFontString():GetWidth()+30,30)--*1.4
-end
-
-function ArtifactTab_setEQButton(button)
-	button:SetSize(button:GetFontString():GetWidth()+30,60)--*1.4
-	local texture = button:GetNormalTexture()
-	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
-	texture:SetPoint("TOP", b ,"TOP", 0, -15)
-	texture:SetPoint("LEFT", b ,"LEFT", 0, 0)
-	texture:SetPoint("RIGHT", b ,"RIGHT", 0, 0)
-	texture:SetPoint("BOTTOM", b ,"BOTTOM", 0, -15)
-	button:SetNormalTexture(texture) --needed?
-	--button:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
-end
-
-function ArtifactTab_updateButtonSkins(button)
-	for i=1,#btnList do
-		btnList[i]:SetNormalTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
-	end
-	button:SetSize(button:GetFontString():GetWidth()+30,60)--*1.4
-	local texture = button:GetNormalTexture()
-	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
-	texture:SetPoint("TOP", b ,"TOP", 0, -15)
-	texture:SetPoint("LEFT", b ,"LEFT", 0, 0)
-	texture:SetPoint("RIGHT", b ,"RIGHT", 0, 0)
-	texture:SetPoint("BOTTOM", b ,"BOTTOM", 0, -15)
-	button:SetNormalTexture(texture)
-end
-
-function ArtifactTab_createEqButton(name, frame)
-	local b = CreateFrame("Button",name,PlayerTalentFrame)
-	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
-	bFontString = b:CreateFontString()
-	bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-	bFontString:SetText(ArtifactTab_arteToSpecc(name))
-	--bFontString:SetAllPoints(b)
-	bFontString:SetPoint("TOP", b ,"TOP", 0, -30)
-	b:SetFontString(bFontString)
-	b:SetSize(bFontString:GetWidth()+30,60)--*1.4
 	local texture = b:CreateTexture()
-	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
-	texture:SetPoint("TOP", b ,"TOP", 0, -15)
-	texture:SetPoint("LEFT", b ,"LEFT", 0, 0)
-	texture:SetPoint("RIGHT", b ,"RIGHT", 0, 0)
-	texture:SetPoint("BOTTOM", b ,"BOTTOM", 0, -15)
-	--texture:SetAllPoints(b)
+	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
+	texture:SetAllPoints(b)
 	b:SetNormalTexture(texture)
-	b:SetHighlightTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+	local highTex = b:CreateTexture()
+	highTex:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
+	highTex:SetAllPoints(b)
+	b:SetHighlightTexture(highTex)
 	return b
 end
 
@@ -336,9 +307,11 @@ function ArtifactTab_createEquipedButton()
 	if itemId then -- somehow the ID is nil if the player logs in
 		name, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
-			buttonArte = ArtifactTab_createEqButton(itemId, lastFrame) --name
+			buttonArte = ArtifactTab_createButton(itemId, lastFrame) --name
+			buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
+				ArtifactTab_setActiveButton(buttonArte)
 			end)
 			buttonArte:Show()
 			table.insert(btnList, buttonArte)
