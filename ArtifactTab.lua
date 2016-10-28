@@ -22,6 +22,7 @@ local btnPos = 0
 local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
 local arteList = {}
+local isReload = false
 
 local speccList = {
 	-- Fishing
@@ -87,16 +88,21 @@ local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("ADDON_LOADED");
 	eventResponseFrame:RegisterEvent("BAG_UPDATE");
 	eventResponseFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
-
+	eventResponseFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 
 local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
 	if (event == "ADDON_LOADED" and arg1 == "Blizzard_TalentUI") then
 		ArtifactTab_clearLists()
 		ArtifactTab_scanArtes()
 		ArtifactTab_createSortedButtons()
+		isReload = true;
 	elseif (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED") then
 		ArtifactTab_checkIFUpdateIsNeeded()
 		--print(event.." "..arg1)
+	elseif (event =="PLAYER_ENTERING_WORLD" and isReload) then
+		ArtifactTab_clearLists()
+		ArtifactTab_scanArtes()
+		ArtifactTab_createSortedButtons()
 	end
 end
 
