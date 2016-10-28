@@ -34,11 +34,11 @@ local speccList = {
 	[128858] = {["name"] = L["Balance"],["priority"] = 1}, 
 	[128860] = {["name"] = L["Feral"],["priority"] = 2}, 
 	[128821] = {["name"] = L["Guardian"],["priority"] = 3}, 
-	[128306] = {["name"] = L["Restoration"],["priority"] = 4},	
+	[128306] = {["name"] = L["RestorationD"],["priority"] = 4},	
 	-- Paladin
 	[128823] = {["name"] = L["Holy"],["priority"] = 1},
-	[128867] = {["name"] = L["Protection"],["priority"] = 2}, --off
-	[128866] = {["name"] = L["Protection"],["priority"] = 2}, 
+	[128867] = {["name"] = L["ProtectionP"],["priority"] = 2}, --off
+	[128866] = {["name"] = L["ProtectionP"],["priority"] = 2}, 
 	[120978] = {["name"] = L["Retribution"],["priority"] = 3}, 	
 	-- Rogue
 	[128870] = {["name"] = L["Assassination"],["priority"] = 1}, 
@@ -70,13 +70,13 @@ local speccList = {
 	-- Warrior
 	[128910] = {["name"] = L["Arms"],["priority"] = 1}, 
 	[128908] = {["name"] = L["Fury"],["priority"] = 2}, 
-	[128288] = {["name"] = L["Protection"],["priority"] = 3}, 
-	[128289] = {["name"] = L["Protection"],["priority"] = 3}, --off
+	[128288] = {["name"] = L["ProtectionW"],["priority"] = 3}, 
+	[128289] = {["name"] = L["ProtectionW"],["priority"] = 3}, --off
 	-- Shaman
 	[128935] = {["name"] = L["Elemental"],["priority"] = 1}, 
 	[128819] = {["name"] = L["Enhancement"],["priority"] = 2}, 
-	[128911] = {["name"] = L["Restoration"],["priority"] = 3}, 
-	[128934] = {["name"] = L["Restoration"],["priority"] = 3}, --off
+	[128911] = {["name"] = L["RestorationS"],["priority"] = 3}, 
+	[128934] = {["name"] = L["RestorationS"],["priority"] = 3}, --off
 	-- Hunter
 	[128861] = {["name"] = L["Beast Mastery"],["priority"] = 1}, 
 	[128826] = {["name"] = L["Marksmanship"],["priority"] = 2}, 	
@@ -87,8 +87,8 @@ local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("ADDON_LOADED");
 	eventResponseFrame:RegisterEvent("BAG_UPDATE");
 	eventResponseFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
-	
-	
+
+
 local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
 	if (event == "ADDON_LOADED" and arg1 == "Blizzard_TalentUI") then
 		ArtifactTab_clearLists()
@@ -270,11 +270,12 @@ function ArtifactTab_createArteButton(name, container, slot)
 	lastFrame = buttonArte;
 end
 
+
 function ArtifactTab_createButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
 	bFontString = b:CreateFontString()
-	bFontString:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	bFontString:SetFont(L["UIFont"], 10, "OUTLINE")
 	bFontString:SetText(ArtifactTab_arteToSpecc(name))
 	bFontString:SetAllPoints(b)
 	b:SetFontString(bFontString)

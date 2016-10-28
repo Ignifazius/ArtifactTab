@@ -1,5 +1,8 @@
 local _, L = ...;
 if ((GetLocale() == "enUS") or (GetLocale() == "enGB")) then
+	--misc
+	L["UIFont"] =  "Fonts\\FRIZQT__.TTF"
+	--fishing
 	L["Fishing"] = "Fishing"
 	-- DK
 	L["Frost"] = "Frost"
@@ -8,12 +11,12 @@ if ((GetLocale() == "enUS") or (GetLocale() == "enGB")) then
 	-- Druid
 	L["Guardian"] = "Guardian"
 	L["Feral"] = "Feral"
-	L["Restoration"] = "Restoration"
-	L["Balance"] = "Boomkin" --"Balance"
+	L["RestorationD"] = "Restoration"
+	L["Balance"] =  "Balance"--"Boomkin"
 	-- Paladin
 	L["Holy"] = "Holy"
 	L["Retribution"] = "Retribution"
-	L["Protection"] = "Protection"
+	L["ProtectionP"] = "Protection"
 	-- Rogue
 	L["Outlaw"] = "Outlaw"
 	L["Assassination"] = "Assassination"
@@ -40,10 +43,10 @@ if ((GetLocale() == "enUS") or (GetLocale() == "enGB")) then
 	-- Warrior
 	L["Fury"] = "Fury"
 	L["Arms"] = "Arms"
-	--L["Protection"] = "Protection"
+	L["ProtectionW"] = "Protection"
 	-- Shaman
 	L["Elemental"] = "Elemental"
-	--L["Restoration"] = "Restoration"
+	L["RestorationS"] = "Restoration"
 	L["Enhancement"] = "Enhancement"
 	-- Hunter
 	L["Beast Mastery"] = "Beast Mastery"

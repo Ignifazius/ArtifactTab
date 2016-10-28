@@ -1,5 +1,8 @@
 local _, L = ...;
 if GetLocale() == "deDE" then
+	--misc
+	L["UIFont"] =  "Fonts\\FRIZQT__.TTF"
+	--fishing
 	L["Fishing"] = "Angeln"
 	-- DK
 	L["Frost"] = "Frost"
@@ -8,12 +11,12 @@ if GetLocale() == "deDE" then
 	-- Druid --
 	L["Guardian"] = "Wächter"
 	L["Feral"] = "Wildheit"
-	L["Restoration"] = "Wiederherstellung"
-	L["Balance"] = "Gleichgewicht" --"Balance"
+	L["RestorationD"] = "Wiederherstellung"
+	L["Balance"] = "Gleichgewicht"
 	-- Paladin
 	L["Holy"] = "Heilig"
 	L["Retribution"] = "Vergeltung"
-	L["Protection"] = "Schutz"
+	L["ProtectionP"] = "Schutz"
 	-- Rogue
 	L["Outlaw"] = "Gesetzlosigkeit"
 	L["Assassination"] = "Meucheln"
@@ -40,10 +43,10 @@ if GetLocale() == "deDE" then
 	-- Warrior
 	L["Fury"] = "Furor"
 	L["Arms"] = "Waffen"
-	--L["Protection"] = "Schutz"
+	L["ProtectionW"] = "Schutz"
 	-- Shaman
 	L["Elemental"] = "Elementar"
-	--L["Restoration"] = "Wiederherstellung"
+	L["RestorationS"] = "Wiederherstellung"
 	L["Enhancement"] = "Verstärkung"
 	-- Hunter
 	L["Beast Mastery"] = "Tierherrschaft"
