@@ -127,7 +127,11 @@ function ArtifactTab_scanArtes()
 	for container=0,5 do
 		for slot=0,32 do
 			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
-			if quality == 6 and itemID ~= 139390 then -- Artifact research note
+			if quality == 6 then 
+				name, link, _, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(itemID)
+				--print(name.." | "..class.." | "..equipSlot.." |")
+			end
+			if quality == 6 and class ~= "Consumable" then -- Artifact research note / skins
 				name = GetItemInfo(itemID)
 				table.insert(arteList, ArtifactTab_createArteContainer("bag", container, slot, itemID))
 			end			
