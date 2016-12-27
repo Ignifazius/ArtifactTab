@@ -28,60 +28,60 @@ local speccList = {
 	-- Fishing
 	[133755] = {["name"] = L["Fishing"], ["priority"] = 0},
 	-- DK	
-	[128402] = {["name"] = L["Blood"],["priority"] = 1},
-	[128403] = {["name"] = L["Unholy"],["priority"] = 2}, 
-	[128292] = {["name"] = L["Frost"],["priority"] = 3}, 
+	[128402] = {["name"] = 250,["priority"] = 1},
+	[128403] = {["name"] = 252,["priority"] = 2},
+	[128292] = {["name"] = 251,["priority"] = 3},
 	-- Druid	
-	[128858] = {["name"] = L["Balance"],["priority"] = 1}, 
-	[128860] = {["name"] = L["Feral"],["priority"] = 2}, 
-	[128821] = {["name"] = L["Guardian"],["priority"] = 3}, 
-	[128306] = {["name"] = L["RestorationD"],["priority"] = 4},	
+	[128858] = {["name"] = 102,["priority"] = 1},
+	[128860] = {["name"] = 103,["priority"] = 2},
+	[128821] = {["name"] = 104,["priority"] = 3},
+	[128306] = {["name"] = 105,["priority"] = 4},
 	-- Paladin
-	[128823] = {["name"] = L["Holy"],["priority"] = 1},
-	[128867] = {["name"] = L["ProtectionP"],["priority"] = 2}, --off
-	[128866] = {["name"] = L["ProtectionP"],["priority"] = 2}, 
-	[120978] = {["name"] = L["Retribution"],["priority"] = 3}, 	
+	[128823] = {["name"] = 65,["priority"] = 1},
+	[128867] = {["name"] = 66,["priority"] = 2}, --off
+	[128866] = {["name"] = 66,["priority"] = 2},
+	[120978] = {["name"] = 70,["priority"] = 3},
 	-- Rogue
-	[128870] = {["name"] = L["Assassination"],["priority"] = 1}, 
-	[128872] = {["name"] = L["Outlaw"],["priority"] = 2}, 
+	[128870] = {["name"] = 259,["priority"] = 1},
+	[128872] = {["name"] = 260,["priority"] = 2},
 	--[134552] = L["Outlaw"],	
-	[128476] = {["name"] = L["Sublety"],["priority"] = 3}, 
+	[128476] = {["name"] = 261,["priority"] = 3},
 	-- DH
-	[127829] = {["name"] = L["Havoc"],["priority"] = 1}, 
-	[127830] = {["name"] = L["Havoc"],["priority"] = 1}, --off
-	[128832] = {["name"] = L["Vengeance"],["priority"] = 2}, 
-	[128831] = {["name"] = L["Vengeance"],["priority"] = 2}, --off	
+	[127829] = {["name"] = 577,["priority"] = 1},
+	[127830] = {["name"] = 577,["priority"] = 1}, --off
+	[128832] = {["name"] = 581,["priority"] = 2},
+	[128831] = {["name"] = 581,["priority"] = 2}, --off
 	-- Warlock
-	[128942] = {["name"] = L["Affliction"],	["priority"] = 1}, 
-	[128943] = {["name"] = L["Demonology"],["priority"] = 2},  --off	
-	[137246] = {["name"] = L["Demonology"],["priority"] = 2},
-	[128941] = {["name"] = L["Destruction"],["priority"] = 3},
+	[128942] = {["name"] = 265,	["priority"] = 1},
+	[128943] = {["name"] = 266,["priority"] = 2},  --off
+	[137246] = {["name"] = 266,["priority"] = 2},
+	[128941] = {["name"] = 267,["priority"] = 3},
 	-- Mage
-	[127857] = {["name"] = L["Arcane"],["priority"] = 1}, 
-	[128820] = {["name"] = L["Fire"],["priority"] = 2}, 
-	[128862] = {["name"] = L["Frost"],["priority"] = 3}, 
+	[127857] = {["name"] = 62,["priority"] = 1},
+	[128820] = {["name"] = 63,["priority"] = 2},
+	[128862] = {["name"] = 64,["priority"] = 3},
 	-- Priest
-	[128868] = {["name"] = L["Discipline"],["priority"] = 1},
-	[128825] = {["name"] = L["Holy"],["priority"] = 2}, 
-	[128827] = {["name"] = L["Shadow"],["priority"] = 3}, 
+	[128868] = {["name"] = 256,["priority"] = 1},
+	[128825] = {["name"] = 257,["priority"] = 2},
+	[128827] = {["name"] = 258,["priority"] = 3},
 	-- Monk
-	[128938] = {["name"] = L["Brewmaster"],["priority"] = 1}, 
-	[128937] = {["name"] = L["Mistweaver"],["priority"] = 2},
-	[128940] = {["name"] = L["Windwalker"],["priority"] = 3}, 
+	[128938] = {["name"] = 268,["priority"] = 1},
+	[128937] = {["name"] = 270,["priority"] = 2},
+	[128940] = {["name"] = 269,["priority"] = 3},
 	-- Warrior
-	[128910] = {["name"] = L["Arms"],["priority"] = 1}, 
-	[128908] = {["name"] = L["Fury"],["priority"] = 2}, 
-	[128288] = {["name"] = L["ProtectionW"],["priority"] = 3}, 
-	[128289] = {["name"] = L["ProtectionW"],["priority"] = 3}, --off
+	[128910] = {["name"] = 71,["priority"] = 1},
+	[128908] = {["name"] = 72,["priority"] = 2},
+	[128288] = {["name"] = 73,["priority"] = 3},
+	[128289] = {["name"] = 73,["priority"] = 3}, --off
 	-- Shaman
-	[128935] = {["name"] = L["Elemental"],["priority"] = 1}, 
-	[128819] = {["name"] = L["Enhancement"],["priority"] = 2}, 
-	[128911] = {["name"] = L["RestorationS"],["priority"] = 3}, 
-	[128934] = {["name"] = L["RestorationS"],["priority"] = 3}, --off
+	[128935] = {["name"] = 262,["priority"] = 1},
+	[128819] = {["name"] = 263,["priority"] = 2},
+	[128911] = {["name"] = 264,["priority"] = 3},
+	[128934] = {["name"] = 264,["priority"] = 3}, --off
 	-- Hunter
-	[128861] = {["name"] = L["Beast Mastery"],["priority"] = 1}, 
-	[128826] = {["name"] = L["Marksmanship"],["priority"] = 2}, 	
-	[128808] = {["name"] = L["Survival"],["priority"] = 3}
+	[128861] = {["name"] = 253,["priority"] = 1},
+	[128826] = {["name"] = 254,["priority"] = 2},
+	[128808] = {["name"] = 255,["priority"] = 3}
 }
 
 local eventResponseFrame = CreateFrame("Frame", "Helper")
@@ -117,6 +117,12 @@ function ArtifactTab_clearLists()
 	arteList = {}
 end
 
+function ArtifactTab_getLocalizedSPeccByID(specializationID)
+	--local id, name, description, icon, background, role, class = GetSpecializationInfoByID(specializationID)
+	local _, name = GetSpecializationInfoByID(specializationID)
+	return name;
+end
+
 function ArtifactTab_scanArtes()
 	_, _, classIndex = UnitClass("player");
 	if classIndex == 3 then -- hunter
@@ -132,7 +138,7 @@ function ArtifactTab_scanArtes()
 				--print(name.." | "..class.." | "..equipSlot.." |")
 			end
 			if quality == 6 and class ~= "Consumable" then -- Artifact research note / skins
-				name = GetItemInfo(itemID)
+				--name = GetItemInfo(itemID)
 				table.insert(arteList, ArtifactTab_createArteContainer("bag", container, slot, itemID))
 			end			
 		end
@@ -346,10 +352,10 @@ function ArtifactTab_createSortedButtons()
 end
 
 function ArtifactTab_arteToSpecc(id)
-	local retID = speccList[id]["name"]
-	if retID == nil then
+	local retName = ArtifactTab_getLocalizedSPeccByID(speccList[id]["name"])
+	if retName == nil then
 		name = GetItemInfo(id)
 		return name 
 	end
-	return retID
+	return retName
 end
