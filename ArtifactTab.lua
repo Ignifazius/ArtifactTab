@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]	
-local _, L = ...;
+--local _, L = ...;
 local ArtifactTabDebug = true;
 --local initScan = true
 --local btnPos = 0
@@ -23,6 +23,7 @@ local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
 local arteList = {}
 local isReload = false
+local UIFont = "Fonts\\FRIZQT__.TTF";
 
 local speccList = {
 	-- Fishing
@@ -124,6 +125,18 @@ function ArtifactTab_clearLists()
 	arteList = {}
 end
 
+function ArtifactTab_setLocaleFont()
+	local locale = GetLocale();
+	if locale == "ruRU" then
+		UIFont =  "Fonts\\FRIZQT___CYR.TTF"
+	elseif locale == "krKR" then
+		UIFont = "Fonts\\2002.TTF"
+	else --enUS, enGB", deDE
+		-- UIFont = "Fonts\\FRIZQT__.TTF"
+ 	end
+
+end
+
 function ArtifactTab_getLocalizedSPeccByID(specializationID)
 	--local id, name, description, icon, background, role, class = GetSpecializationInfoByID(specializationID)
 	if specializationID == 1 then
@@ -162,7 +175,7 @@ function ArtifactTab_scanArtes()
 	end
 end
 
-function countArtes()
+function ArtifactTab_countArtes()
 	local count = 0
 	for container=0,5 do
 		for slot=0,32 do
@@ -190,7 +203,7 @@ end
 
 function ArtifactTab_checkIFUpdateIsNeeded()
 	local updateRequired = false
-	if #arteList ~= countArtes() then
+	if #arteList ~= ArtifactTab_countArtes() then
 		updateRequired = true
 	else
 		for container=0,5 do
@@ -217,11 +230,11 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 								else
 									--print("(eq) update needed")
 									updateRequired = true
-								end					
+								end
 							end
 						end
 					end
-				end			
+				end
 			end
 		end
 	end
@@ -304,7 +317,7 @@ function ArtifactTab_createButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
 	local bFontString = b:CreateFontString()
-	bFontString:SetFont(L["UIFont"], 10, "OUTLINE")
+	bFontString:SetFont(UIFont, 10, "OUTLINE")
 	bFontString:SetText(ArtifactTab_arteToSpecc(name))
 	bFontString:SetAllPoints(b)
 	b:SetFontString(bFontString)

@@ -5,9 +5,4 @@
 ## Notes: Adds tabs for your artifacts to the talent screen.
 ## Notes-deDE: Fügt weitere Reiter für die Artefakte zur Talentübersicht hinzu.
 
-localization.core.lua
-localization.de.lua
-localization.en.lua
-localization.kr.lua
-localization.ru.lua
 ArtifactTab.lua
