@@ -17,8 +17,8 @@
 ]]	
 local _, L = ...;
 local ArtifactTabDebug = true;
-local initScan = true
-local btnPos = 0
+--local initScan = true
+--local btnPos = 0
 local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
 local arteList = {}
@@ -52,7 +52,7 @@ local speccList = {
 	[128832] = {["name"] = 581,["priority"] = 2},
 	[128831] = {["name"] = 581,["priority"] = 2}, --off
 	-- Warlock
-	[128942] = {["name"] = 265,	["priority"] = 1},
+	[128942] = {["name"] = 265,["priority"] = 1},
 	[128943] = {["name"] = 266,["priority"] = 2},  --off
 	[137246] = {["name"] = 266,["priority"] = 2},
 	[128941] = {["name"] = 267,["priority"] = 3},
@@ -124,7 +124,7 @@ function ArtifactTab_getLocalizedSPeccByID(specializationID)
 end
 
 function ArtifactTab_scanArtes()
-	_, _, classIndex = UnitClass("player");
+	local _, _, classIndex = UnitClass("player");
 	if classIndex == 3 then -- hunter
 		lastFrame = PlayerTalentFrameTab4
 	else
@@ -132,9 +132,11 @@ function ArtifactTab_scanArtes()
 	end
 	for container=0,5 do
 		for slot=0,32 do
-			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
+			local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
+			local class = "none"
 			if quality == 6 then 
-				name, link, _, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(itemID)
+				--local name, link, _, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(itemID)
+				_, _, _, _, _, class = GetItemInfo(itemID)
 				--print(name.." | "..class.." | "..equipSlot.." |")
 			end
 			if quality == 6 and class ~= "Consumable" then -- Artifact research note / skins
@@ -153,7 +155,7 @@ function countArtes()
 	local count = 0
 	for container=0,5 do
 		for slot=0,32 do
-			_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
+			local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
 			if quality == 6 and itemID ~= 139390 then -- Artifact research note
 				count = count+1
 			end			
@@ -161,7 +163,7 @@ function countArtes()
 	end
 	local eqID = ArtifactTab_getEquippedItemID()
 	if eqID ~= nil then
-		_, _, quality = GetItemInfo(eqID)
+		local _, _, quality = GetItemInfo(eqID)
 		if quality == 6 then
 			count = count+1
 		end
@@ -182,9 +184,9 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 	else
 		for container=0,5 do
 			for slot=0,32 do
-				_, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
+				local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
 				if quality == 6 and itemID ~= 139390 then -- Artifact research note
-					name = GetItemInfo(itemID)
+					--name = GetItemInfo(itemID)
 					--print(#arteList)
 					for i=1, #arteList do 
 						if arteList[i]["id"] == ArtifactTab_getMainhandArtifactID(itemID) then
@@ -290,7 +292,7 @@ end
 function ArtifactTab_createButton(name, frame)
 	local b = CreateFrame("Button",name,PlayerTalentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
-	bFontString = b:CreateFontString()
+	local bFontString = b:CreateFontString()
 	bFontString:SetFont(L["UIFont"], 10, "OUTLINE")
 	bFontString:SetText(ArtifactTab_arteToSpecc(name))
 	bFontString:SetAllPoints(b)
@@ -311,7 +313,8 @@ function ArtifactTab_getEquippedItemID()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
 	if itemId then -- somehow the ID is nil if the player logs in
-		name, _, quality = GetItemInfo(itemId)
+		--local name, _, quality = GetItemInfo(itemId)
+		local _, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
 			return itemId
 		end
@@ -322,9 +325,10 @@ function ArtifactTab_createEquipedButton()
 	local slotId = GetInventorySlotInfo("MainHandSlot")
 	local itemId = GetInventoryItemID("player", slotId)
 	if itemId then -- somehow the ID is nil if the player logs in
-		name, _, quality = GetItemInfo(itemId)
+		--local name, _, quality = GetItemInfo(itemId)
+		local _, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
-			buttonArte = ArtifactTab_createButton(itemId, lastFrame) --name
+			local buttonArte = ArtifactTab_createButton(itemId, lastFrame) --name
 			buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
@@ -354,7 +358,7 @@ end
 function ArtifactTab_arteToSpecc(id)
 	local retName = ArtifactTab_getLocalizedSPeccByID(speccList[id]["name"])
 	if retName == nil then
-		name = GetItemInfo(id)
+		local name = GetItemInfo(id)
 		return name 
 	end
 	return retName
