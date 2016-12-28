@@ -26,8 +26,9 @@ local isReload = false
 
 local speccList = {
 	-- Fishing
-	[133755] = {["name"] = L["Fishing"], ["priority"] = 0},
-	-- DK	
+	--[133755] = {["name"] = L["Fishing"], ["priority"] = 0},
+	[133755] = {["name"] = ArtifactTab_getFishingString(), ["priority"] = 0},
+	-- DK
 	[128402] = {["name"] = 250,["priority"] = 1},
 	[128403] = {["name"] = 252,["priority"] = 2},
 	[128292] = {["name"] = 251,["priority"] = 3},
@@ -108,6 +109,11 @@ end
 
 eventResponseFrame:SetScript("OnEvent", eventHandler);
 
+function ArtifactTab_getFishingString()
+	--local name, icon, skillLevel, maxSkillLevel, numAbilities, spelloffset, skillLine, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(index);
+	local profName = GetProfessionInfo(356)
+	return profName
+end
 
 function ArtifactTab_clearLists()
 	for i=1,#btnList do
