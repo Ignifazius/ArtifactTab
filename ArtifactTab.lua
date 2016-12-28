@@ -27,7 +27,7 @@ local isReload = false
 local speccList = {
 	-- Fishing
 	--[133755] = {["name"] = L["Fishing"], ["priority"] = 0},
-	[133755] = {["name"] = ArtifactTab_getFishingString(), ["priority"] = 0},
+	[133755] = {["name"] = 1, ["priority"] = 0},
 	-- DK
 	[128402] = {["name"] = 250,["priority"] = 1},
 	[128403] = {["name"] = 252,["priority"] = 2},
@@ -111,7 +111,8 @@ eventResponseFrame:SetScript("OnEvent", eventHandler);
 
 function ArtifactTab_getFishingString()
 	--local name, icon, skillLevel, maxSkillLevel, numAbilities, spelloffset, skillLine, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(index);
-	local profName = GetProfessionInfo(356)
+	local _, _, _, fishing = GetProfessions();
+	local profName = GetProfessionInfo(fishing)
 	return profName
 end
 
@@ -125,8 +126,12 @@ end
 
 function ArtifactTab_getLocalizedSPeccByID(specializationID)
 	--local id, name, description, icon, background, role, class = GetSpecializationInfoByID(specializationID)
-	local _, name = GetSpecializationInfoByID(specializationID)
-	return name;
+	if specializationID == 1 then
+		return ArtifactTab_getFishingString();
+	else
+		local _, name = GetSpecializationInfoByID(specializationID)
+		return name;
+	end
 end
 
 function ArtifactTab_scanArtes()
