@@ -127,14 +127,19 @@ end
 
 function ArtifactTab_setLocaleFont()
 	local locale = GetLocale();
-	if locale == "ruRU" then
-		UIFont =  "Fonts\\FRIZQT___CYR.TTF"
-	elseif locale == "krKR" then
-		UIFont = "Fonts\\2002.TTF"
-	else --enUS, enGB", deDE
-		-- UIFont = "Fonts\\FRIZQT__.TTF"
- 	end
+	locale = "ruRU"
 
+	if locale == "ruRU" then
+		UIFont = "Fonts\\FRIZQT___CYR.TTF"
+	elseif locale == "koKR" then
+		UIFont = "Fonts\\2002.TTF"
+	elseif locale == "zhTW" then
+		UIFont = "Fonts\\bHEI01B.TTF"
+	elseif locale == "zhCN" then
+		UIFont = "Fonts\\ARKai_C.ttf"
+	else --enUS, enGB, deDE, etc
+		UIFont = "Fonts\\FRIZQT__.TTF"
+	end
 end
 
 function ArtifactTab_getLocalizedSPeccByID(specializationID)
