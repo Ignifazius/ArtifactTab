@@ -23,7 +23,23 @@ local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
 local arteList = {}
 local isReload = false
-local UIFont = "Fonts\\FRIZQT__.TTF";
+
+function ArtifactTab_setLocaleFont()
+	local locale = GetLocale();
+	if locale == "ruRU" then
+		return"Fonts\\FRIZQT___CYR.TTF"
+	elseif locale == "koKR" then
+		return "Fonts\\2002.TTF"
+	elseif locale == "zhTW" then
+		return "Fonts\\bHEI01B.TTF"
+	elseif locale == "zhCN" then
+		return "Fonts\\ARKai_C.ttf"
+	else --enUS, enGB, deDE, etc
+		return "Fonts\\FRIZQT__.TTF"
+	end
+end
+
+local UIFont = ArtifactTab_setLocaleFont()
 
 local speccList = {
 	-- Fishing
@@ -123,23 +139,6 @@ function ArtifactTab_clearLists()
 	end
 	btnList = {}
 	arteList = {}
-end
-
-function ArtifactTab_setLocaleFont()
-	local locale = GetLocale();
-	locale = "ruRU"
-
-	if locale == "ruRU" then
-		UIFont = "Fonts\\FRIZQT___CYR.TTF"
-	elseif locale == "koKR" then
-		UIFont = "Fonts\\2002.TTF"
-	elseif locale == "zhTW" then
-		UIFont = "Fonts\\bHEI01B.TTF"
-	elseif locale == "zhCN" then
-		UIFont = "Fonts\\ARKai_C.ttf"
-	else --enUS, enGB, deDE, etc
-		UIFont = "Fonts\\FRIZQT__.TTF"
-	end
 end
 
 function ArtifactTab_getLocalizedSPeccByID(specializationID)
@@ -290,7 +289,7 @@ function ArtifactTab_setActiveButton(button)
 		highTexN:SetAllPoints(btnList[i])
 		highTexN:SetPoint("TOP", button ,"TOP", 0, -10)		
 	end
-	button:SetSize(button:GetFontString():GetWidth(),30)
+	button:SetSize(button:GetFontString():GetWidth(), 30)
 	local texture = button:GetNormalTexture()
 	texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-ACTIVETAB")
 	texture:SetPoint("TOP", button ,"TOP", 0, -15)
