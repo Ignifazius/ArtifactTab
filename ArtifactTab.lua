@@ -14,11 +14,8 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-]]	
---local _, L = ...;
+]]
 local ArtifactTabDebug = true;
---local initScan = true
---local btnPos = 0
 local lastFrame = PlayerTalentFrameTab3
 local btnList = {}
 local arteList = {}
@@ -43,7 +40,6 @@ local UIFont = ArtifactTab_setLocaleFont()
 
 local speccList = {
 	-- Fishing
-	--[133755] = {["name"] = L["Fishing"], ["priority"] = 0},
 	[133755] = {["name"] = 1, ["priority"] = 0},
 	-- DK
 	[128402] = {["name"] = 250,["priority"] = 1},
@@ -127,7 +123,6 @@ end
 eventResponseFrame:SetScript("OnEvent", eventHandler);
 
 function ArtifactTab_getFishingString()
-	--local name, icon, skillLevel, maxSkillLevel, numAbilities, spelloffset, skillLine, skillModifier, specializationIndex, specializationOffset = GetProfessionInfo(index);
 	local _, _, _, fishing = GetProfessions();
 	local profName = GetProfessionInfo(fishing)
 	return profName
@@ -142,7 +137,6 @@ function ArtifactTab_clearLists()
 end
 
 function ArtifactTab_getLocalizedSPeccByID(specializationID)
-	--local id, name, description, icon, background, role, class = GetSpecializationInfoByID(specializationID)
 	if specializationID == 1 then
 		return ArtifactTab_getFishingString();
 	else
