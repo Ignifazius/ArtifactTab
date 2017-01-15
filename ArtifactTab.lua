@@ -16,7 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 local ArtifactTabDebug = true;
-local lastFrame = PlayerTalentFrameTab3
+--local lastFrame = PlayerTalentFrameTab3
+local lastFrame = ArtifactFrameTab1
 local btnList = {}
 local arteList = {}
 local isReload = false
@@ -105,11 +106,13 @@ local eventResponseFrame = CreateFrame("Frame", "Helper")
 	eventResponseFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 
 local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
-	if (event == "ADDON_LOADED" and arg1 == "Blizzard_TalentUI") then
+    if (event == "ADDON_LOADED" and arg1 == "Blizzard_ArtifactUI") then
 		ArtifactTab_clearLists()
 		ArtifactTab_scanArtes()
 		ArtifactTab_createSortedButtons()
 		isReload = true;
+    elseif (event == "ADDON_LOADED" and arg1 == "Blizzard_TalentUI") then
+        ArtifactTab_createAddonButton()
 	elseif (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED") then
 		ArtifactTab_checkIFUpdateIsNeeded()
 		--print(event.." "..arg1)
@@ -145,13 +148,39 @@ function ArtifactTab_getLocalizedSPeccByID(specializationID)
 	end
 end
 
+function ArtifactTab_createAddonButton()
+    local slotId = GetInventorySlotInfo("MainHandSlot")
+    local itemId = GetInventoryItemID("player", slotId)
+    if itemId then -- somehow the ID is nil if the player logs in
+        --local name, _, quality = GetItemInfo(itemId)
+        local _, _, quality = GetItemInfo(itemId)
+        if quality == 6 then
+            local _, _, classIndex = UnitClass("player");
+            local usedFrame
+            if classIndex == 3 then -- hunter
+                usedFrame = PlayerTalentFrameTab4
+            else
+                usedFrame = PlayerTalentFrameTab3
+            end
+            local buttonArte = ArtifactTab_createButton("TalentFrameButton", usedFrame, PlayerTalentFrame) --name
+            local bFontString = buttonArte:CreateFontString()
+            bFontString:SetFont(UIFont, 10, "OUTLINE")
+            bFontString:SetText("Artifacts")
+            bFontString:SetAllPoints(buttonArte)
+            buttonArte:SetFontString(bFontString)
+            buttonArte:SetSize(bFontString:GetWidth()+30,30)--*1.4
+            buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
+            buttonArte:SetScript("OnClick", function()
+                SocketInventoryItem(slotId)
+                ArtifactTab_setActiveButton(btnList[ArtifactTab_findActiveArte()])
+            end)
+            buttonArte:Show()
+        end
+    end
+end
+
 function ArtifactTab_scanArtes()
-	local _, _, classIndex = UnitClass("player");
-	if classIndex == 3 then -- hunter
-		lastFrame = PlayerTalentFrameTab4
-	else
-		lastFrame = PlayerTalentFrameTab3
-	end
+	lastFrame = ArtifactFrameTab1 -- is important... not sure why
 	for container=0,5 do
 		for slot=0,32 do
 			local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
@@ -173,6 +202,15 @@ function ArtifactTab_scanArtes()
 	end
 end
 
+function ArtifactTab_findActiveArte()
+    for i=1,#btnList do
+        local r,g,b = btnList[i]:GetFontString():GetTextColor()
+        if (b == 0) then
+            return i
+        end
+    end
+end
+
 function ArtifactTab_countArtes()
 	local count = 0
 	for container=0,5 do
@@ -191,12 +229,6 @@ function ArtifactTab_countArtes()
 		end
 	end
 	return count
-end
-
-function ArtifactTab_updateAllButtons()
-	for i=1,#btnList do
-		
-	end	
 end
 
 function ArtifactTab_checkIFUpdateIsNeeded()
@@ -299,7 +331,8 @@ function ArtifactTab_setActiveButton(button)
 end
 
 function ArtifactTab_createArteButton(name, container, slot)
-	local buttonArte = ArtifactTab_createButton(name, lastFrame)
+	local buttonArte = ArtifactTab_createButton(name, lastFrame, ArtifactFrame)
+	--local buttonArte = ArtifactTab_createButton(name, lastFrame, PlayerTalentFrame)
 	buttonArte:SetScript("OnClick", function()
 		SocketContainerItem(container, slot)
 		ArtifactTab_setActiveButton(buttonArte)
@@ -311,8 +344,9 @@ function ArtifactTab_createArteButton(name, container, slot)
 end
 
 
-function ArtifactTab_createButton(name, frame)
-	local b = CreateFrame("Button",name,PlayerTalentFrame)
+function ArtifactTab_createButton(name, frame, parentFrame)
+	--local b = CreateFrame("Button",name,PlayerTalentFrame)
+	local b = CreateFrame("Button",name,parentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
 	local bFontString = b:CreateFontString()
 	bFontString:SetFont(UIFont, 10, "OUTLINE")
@@ -350,7 +384,7 @@ function ArtifactTab_createEquipedButton()
 		--local name, _, quality = GetItemInfo(itemId)
 		local _, _, quality = GetItemInfo(itemId)
 		if quality == 6 then
-			local buttonArte = ArtifactTab_createButton(itemId, lastFrame) --name
+			local buttonArte = ArtifactTab_createButton(itemId, lastFrame, ArtifactFrame) --name
 			buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
@@ -378,6 +412,9 @@ function ArtifactTab_createSortedButtons()
 end
 
 function ArtifactTab_arteToSpecc(id)
+    if (id == "TalentFrameButton") then
+        return "Artifacts"
+    end
 	local retName = ArtifactTab_getLocalizedSPeccByID(speccList[id]["name"])
 	if retName == nil then
 		local name = GetItemInfo(id)
