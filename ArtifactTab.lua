@@ -125,6 +125,17 @@ end
 
 eventResponseFrame:SetScript("OnEvent", eventHandler);
 
+function createTempBtn() -- does not work well
+    local b = CreateFrame("Button","TmpButton",PlayerTalentFrame, "CharacterFrameTabButtonTemplate")
+    b:SetPoint("LEFT", "PlayerTalentFrameTab3" ,"RIGHT", 100, 3)
+    b:SetFrameStrata("LOW")
+    b:SetWidth(80)
+    b:SetHeight(22)
+    b:SetText("TMP")
+    b:UnlockHighlight()
+    b:Show();
+end
+
 function ArtifactTab_getFishingString()
 	local _, _, _, fishing = GetProfessions();
 	local profName = GetProfessionInfo(fishing)
@@ -163,12 +174,18 @@ function ArtifactTab_createAddonButton()
                 usedFrame = PlayerTalentFrameTab3
             end
             local buttonArte = ArtifactTab_createButton("TalentFrameButton", usedFrame, PlayerTalentFrame) --name
+            buttonArte:SetPoint("LEFT", usedFrame ,"RIGHT", -12, 0)
+            buttonArte:SetFrameStrata("LOW")
             local bFontString = buttonArte:CreateFontString()
-            bFontString:SetFont(UIFont, 10, "OUTLINE")
-            bFontString:SetText("Artifacts")
-            bFontString:SetAllPoints(buttonArte)
+            bFontString:SetFont(UIFont, 11, "OUTLINE")
+            bFontString:SetText(ITEM_QUALITY6_DESC)
+            --bFontString:SetAllPoints(buttonArte)
+            bFontString:SetPoint("TOP",buttonArte,"TOP",0,3)
+            bFontString:SetPoint("LEFT",buttonArte,"LEFT",0,0)
+            bFontString:SetPoint("RIGHT",buttonArte,"RIGHT",0,0)
+            bFontString:SetPoint("BOTTOM",buttonArte,"BOTTOM",0,3)
             buttonArte:SetFontString(bFontString)
-            buttonArte:SetSize(bFontString:GetWidth()+30,30)--*1.4
+            buttonArte:SetSize(bFontString:GetWidth()-2,33)
             buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
             buttonArte:SetScript("OnClick", function()
                 SocketInventoryItem(slotId)
