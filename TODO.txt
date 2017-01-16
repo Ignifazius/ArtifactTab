@@ -1,5 +1,0 @@
-1) disable buttons while dead (skin + disableded)
-DONE 2) sort buttons
-DONE 3) highlight currently equiped artifact button
-4) rename + resize on mouseover (?)
-5) close window on 2nd click
