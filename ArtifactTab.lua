@@ -197,7 +197,7 @@ function ArtifactTab_createAddonButton()
 end
 
 function ArtifactTab_scanArtes()
-	lastFrame = ArtifactFrameTab1 -- is important... not sure why
+	lastFrame = ArtifactFrameTab2 -- is important... not sure why
 	for container=0,5 do
 		for slot=0,32 do
 			local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
