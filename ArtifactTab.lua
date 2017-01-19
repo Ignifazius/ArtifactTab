@@ -59,7 +59,7 @@ local speccList = {
 	-- Rogue
 	[128870] = {["name"] = 259,["priority"] = 1},
 	[128872] = {["name"] = 260,["priority"] = 2},
-	--[134552] = L["Outlaw"],	
+	[134552] = {},
 	[128476] = {["name"] = 261,["priority"] = 3},
 	-- DH
 	[127829] = {["name"] = 577,["priority"] = 1},
@@ -207,7 +207,7 @@ function ArtifactTab_scanArtes()
 				_, _, _, _, _, class = GetItemInfo(itemID)
 				--print(name.." | "..class.." | "..equipSlot.." |")
 			end
-			if quality == 6 and class ~= "Consumable" then -- Artifact research note / skins
+			if quality == 6 and class ~= "Consumable" and ArtifactTab_isValidArtifact(itemID) then -- Artifact research note / skins
 				--name = GetItemInfo(itemID)
 				table.insert(arteList, ArtifactTab_createArteContainer("bag", container, slot, itemID))
 			end			
@@ -233,7 +233,8 @@ function ArtifactTab_countArtes()
 	for container=0,5 do
 		for slot=0,32 do
 			local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
-			if quality == 6 and itemID ~= 139390 then -- Artifact research note
+			--if quality == 6 and itemID ~= 139390 then -- Artifact research note
+			if quality == 6 and ArtifactTab_isValidArtifact(itemID) then -- Artifact research note
 				count = count+1
 			end			
 		end
@@ -256,7 +257,7 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 		for container=0,5 do
 			for slot=0,32 do
 				local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
-				if quality == 6 and itemID ~= 139390 then -- Artifact research note
+				if quality == 6 and ArtifactTab_isValidArtifact(itemID) then
 					--name = GetItemInfo(itemID)
 					--print(#arteList)
 					for i=1, #arteList do 
@@ -305,6 +306,17 @@ function ArtifactTab_getMainhandArtifactID(id)
 	else
 		return id
 	end
+end
+
+function ArtifactTab_isValidArtifact(id)
+    for k in pairs(speccList) do
+        if (k == id) then
+            --print("id "..id.." IS valid")
+            return true;
+        end
+    end
+   --print("id "..id.." is NOT valid")
+    return false;
 end
 
 
