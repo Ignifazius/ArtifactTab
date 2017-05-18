@@ -375,7 +375,7 @@ end
 
 function ArtifactTab_createButton(name, frame, parentFrame)
 	--local b = CreateFrame("Button",name,PlayerTalentFrame)
-	local b = CreateFrame("Button",name,parentFrame)
+	local b = CreateFrame("Button","ArtifactTab_Button_" .. name,parentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
 	local bFontString = b:CreateFontString()
 	bFontString:SetFont(UIFont, 10, "OUTLINE")
