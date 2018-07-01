@@ -166,19 +166,20 @@ end
 function ArtifactTab_createAddonButton()
     local slotId = GetInventorySlotInfo("MainHandSlot") --TODO replace with ArtifactTab_getEquippedItemID()
     local itemId = GetInventoryItemID("player", slotId)
+    local arteButtonActive = false
+    local _, _, classIndex = UnitClass("player");
+    local usedFrame
+    if classIndex == 3 then -- hunter
+        usedFrame = PlayerTalentFrameTab4
+    else
+        usedFrame = PlayerTalentFrameTab3
+    end
     if itemId then -- somehow the ID is nil if the player logs in
         --local name, _, quality = GetItemInfo(itemId)
         local _, _, quality = GetItemInfo(itemId)
         if quality == 6 then
-            local _, _, classIndex = UnitClass("player");
-            local usedFrame
-            if classIndex == 3 then -- hunter
-                usedFrame = PlayerTalentFrameTab4
-            else
-                usedFrame = PlayerTalentFrameTab3
-            end
             local buttonArte = ArtifactTab_createButton("TalentFrameButton", usedFrame, PlayerTalentFrame) --name
-            buttonArte:SetPoint("LEFT", usedFrame ,"RIGHT", -12, 0)
+            buttonArte:SetPoint("LEFT", usedFrame ,"RIGHT", -5, 0)
             buttonArte:SetFrameStrata("LOW")
             local bFontString = buttonArte:CreateFontString()
             bFontString:SetFont(UIFont, 11, "OUTLINE")
@@ -196,9 +197,43 @@ function ArtifactTab_createAddonButton()
                 ArtifactTab_setActiveButton(btnList[ArtifactTab_findActiveArte()], btnList)
             end)
             buttonArte:Show()
+            --arteButtonActive = true
+            usedFrame = buttonArte
         end
     end
+    
+    if ArtifactTab_isAzeriteItem(1) then
+        ArtifactTab_startButton(usedFrame, 1)
+    elseif ArtifactTab_isAzeriteItem(3) then
+        ArtifactTab_startButton(usedFrame, 3)
+    elseif ArtifactTab_isAzeriteItem(5) then
+        ArtifactTab_startButton(usedFrame, 5)
+    end
 end
+
+
+function ArtifactTab_startButton(usedFrame, slot)
+local buttonArte = ArtifactTab_createGenericButton("BFATalentFrameButton", usedFrame, PlayerTalentFrame, "Azerite") --name
+    buttonArte:SetPoint("LEFT", usedFrame ,"RIGHT", -5, 0)
+    buttonArte:SetFrameStrata("LOW")
+    local bFontString = buttonArte:CreateFontString()
+    bFontString:SetFont(UIFont, 11, "OUTLINE")
+    bFontString:SetText("Azerite") -- TODO i18n
+    --bFontString:SetAllPoints(buttonArte)
+    bFontString:SetPoint("TOP",buttonArte,"TOP",0,3)
+    bFontString:SetPoint("LEFT",buttonArte,"LEFT",0,0)
+    bFontString:SetPoint("RIGHT",buttonArte,"RIGHT",0,0)
+    bFontString:SetPoint("BOTTOM",buttonArte,"BOTTOM",0,3)
+    buttonArte:SetFontString(bFontString)
+    buttonArte:SetSize(bFontString:GetWidth()-2,33)
+    buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
+    buttonArte:SetScript("OnClick", function()
+        ArtifactTab_openEquippedItem(slot)
+        ArtifactTab_setActiveButton(bfaList[1], bfaList)
+    end)
+    return buttonArte
+end
+
 
 function ArtifactTab_scanArtes()
 	lastFrame = ArtifactFrameTab2 -- is important... not sure why
@@ -460,9 +495,14 @@ function ArtifactTab_arteToSpecc(id)
 	return retName
 end
 
-function ArtifactTab_openEquippedItem(slotID)
+function ArtifactTab_isAzeriteItem(slotID)
     local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID);
-    if C_Item.DoesItemExist(itemLocation) and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation) then
+    return C_Item.DoesItemExist(itemLocation) and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation)
+end
+
+function ArtifactTab_openEquippedItem(slotID)
+    if ArtifactTab_isAzeriteItem(slotID) then
+        local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID);
         OpenAzeriteEmpoweredItemUIFromItemLocation(itemLocation);
     else
         SocketInventoryItem(slotID);
@@ -470,32 +510,39 @@ function ArtifactTab_openEquippedItem(slotID)
 end
 
 function ArtifactTab_BFAButton()
-    local dummy = CreateFrame("Button", "Anchor", AzeriteEmpoweredItemUI)
-    dummy:SetPoint("BOTTOMLEFT", AzeriteEmpoweredItemUI ,"BOTTOMLEFT", 0, -13)
-    dummy:SetWidth(1)
-    dummy:SetHeight(1)
-    dummy:SetText("Head")
-    dummy:SetFrameStrata("LOW")
-    dummy:Show()
-    local head = ArtifactTab_createGenericButton("BfaButtonHead", dummy, AzeriteEmpoweredItemUI, "Head")
-    head:SetScript("OnClick", function()
-        ArtifactTab_openEquippedItem(1)
-        ArtifactTab_setActiveButton(head, bfaList)
-    end)
-    head:Show()
-    local chest = ArtifactTab_createGenericButton("BfaButtonChest", head, AzeriteEmpoweredItemUI, "Chest")
-    chest:SetScript("OnClick", function()
-        ArtifactTab_openEquippedItem(5)
-        ArtifactTab_setActiveButton(chest, bfaList)
-    end)
-    chest:Show()
-    local shoulders = ArtifactTab_createGenericButton("BfaButtonShoulders", chest, AzeriteEmpoweredItemUI, "Shoulders")
-    shoulders:SetScript("OnClick", function()
-        ArtifactTab_openEquippedItem(3)
-        ArtifactTab_setActiveButton(shoulders, bfaList)
-    end)
-    shoulders:Show()
-    table.insert(bfaList, head)
-    table.insert(bfaList, shoulders)
-    table.insert(bfaList, chest)
+    local anchor = CreateFrame("Button", "Anchor", AzeriteEmpoweredItemUI)
+    anchor:SetPoint("BOTTOMLEFT", AzeriteEmpoweredItemUI ,"BOTTOMLEFT", 0, -13)
+    anchor:SetWidth(1)
+    anchor:SetHeight(1)
+    anchor:SetFrameStrata("LOW")
+    anchor:Show()
+    if ArtifactTab_isAzeriteItem(1) then
+        local head = ArtifactTab_createGenericButton("BfaButtonHead", anchor, AzeriteEmpoweredItemUI, "Head")
+        head:SetScript("OnClick", function()
+            ArtifactTab_openEquippedItem(1)
+            ArtifactTab_setActiveButton(head, bfaList)
+        end)
+        head:Show()
+        table.insert(bfaList, head)
+    end
+    
+    if ArtifactTab_isAzeriteItem(5) then
+        local chest = ArtifactTab_createGenericButton("BfaButtonChest", head, AzeriteEmpoweredItemUI, "Chest")
+        chest:SetScript("OnClick", function()
+            ArtifactTab_openEquippedItem(5)
+            ArtifactTab_setActiveButton(chest, bfaList)
+        end)
+        chest:Show()
+        table.insert(bfaList, chest)
+    end
+    
+    if ArtifactTab_isAzeriteItem(3) then
+        local shoulders = ArtifactTab_createGenericButton("BfaButtonShoulders", chest, AzeriteEmpoweredItemUI, "Shoulders")
+        shoulders:SetScript("OnClick", function()
+            ArtifactTab_openEquippedItem(3)
+            ArtifactTab_setActiveButton(shoulders, bfaList)
+        end)
+        shoulders:Show()
+        table.insert(bfaList, shoulders)
+    end  
 end
