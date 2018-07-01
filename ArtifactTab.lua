@@ -19,6 +19,7 @@ local ArtifactTabDebug = true;
 --local lastFrame = PlayerTalentFrameTab3
 local lastFrame = ArtifactFrameTab1
 local btnList = {}
+local bfaList = {}
 local arteList = {}
 local isReload = false
 
@@ -192,7 +193,7 @@ function ArtifactTab_createAddonButton()
             buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
             buttonArte:SetScript("OnClick", function()
                 SocketInventoryItem(slotId)
-                ArtifactTab_setActiveButton(btnList[ArtifactTab_findActiveArte()])
+                ArtifactTab_setActiveButton(btnList[ArtifactTab_findActiveArte()], btnList)
             end)
             buttonArte:Show()
         end
@@ -334,17 +335,17 @@ function ArtifactTab_createArteContainer(typ, con, sl, id)
 	return arte
 end
 
-function ArtifactTab_setActiveButton(button)
-	for i=1,#btnList do
-		btnList[i]:SetSize(btnList[i]:GetFontString():GetWidth(),30)
-		local textureN = btnList[i]:GetNormalTexture()
+function ArtifactTab_setActiveButton(button, list)
+	for i=1,#list do
+		list[i]:SetSize(list[i]:GetFontString():GetWidth(),30)
+		local textureN = list[i]:GetNormalTexture()
 		textureN:SetTexture("Interface\\PaperDollInfoFrame\\UI-CHARACTER-INACTIVETAB")
-		btnList[i]:SetNormalTexture(textureN)
-		textureN:SetAllPoints(btnList[i])
-		local highTexN = btnList[i]:GetHighlightTexture()
+		list[i]:SetNormalTexture(textureN)
+		textureN:SetAllPoints(list[i])
+		local highTexN = list[i]:GetHighlightTexture()
 		highTexN:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-RealHighlight")
-		btnList[i]:SetHighlightTexture(highTexN)
-		highTexN:SetAllPoints(btnList[i])
+		list[i]:SetHighlightTexture(highTexN)
+		highTexN:SetAllPoints(list[i])
 		highTexN:SetPoint("TOP", button ,"TOP", 0, -10)		
 	end
 	button:SetSize(button:GetFontString():GetWidth(), 30)
@@ -367,7 +368,7 @@ function ArtifactTab_createArteButton(name, container, slot)
 	--local buttonArte = ArtifactTab_createButton(name, lastFrame, PlayerTalentFrame)
 	buttonArte:SetScript("OnClick", function()
 		SocketContainerItem(container, slot)
-		ArtifactTab_setActiveButton(buttonArte)
+		ArtifactTab_setActiveButton(buttonArte, btnList)
 	end)
 	buttonArte:Show()
 	buttonArte.previousFrame = lastFrame
@@ -424,7 +425,7 @@ function ArtifactTab_createEquipedButton()
 			buttonArte:GetFontString():SetTextColor(1,0.84,0, 1)
 			buttonArte:SetScript("OnClick", function()
 				SocketInventoryItem(slotId)
-				ArtifactTab_setActiveButton(buttonArte)
+				ArtifactTab_setActiveButton(buttonArte, btnList)
 			end)
 			buttonArte:Show()
 			table.insert(btnList, buttonArte)
@@ -479,16 +480,22 @@ function ArtifactTab_BFAButton()
     local head = ArtifactTab_createGenericButton("BfaButtonHead", dummy, AzeriteEmpoweredItemUI, "Head")
     head:SetScript("OnClick", function()
         ArtifactTab_openEquippedItem(1)
+        ArtifactTab_setActiveButton(head, bfaList)
     end)
     head:Show()
     local chest = ArtifactTab_createGenericButton("BfaButtonChest", head, AzeriteEmpoweredItemUI, "Chest")
     chest:SetScript("OnClick", function()
         ArtifactTab_openEquippedItem(5)
+        ArtifactTab_setActiveButton(chest, bfaList)
     end)
     chest:Show()
     local shoulders = ArtifactTab_createGenericButton("BfaButtonShoulders", chest, AzeriteEmpoweredItemUI, "Shoulders")
     shoulders:SetScript("OnClick", function()
         ArtifactTab_openEquippedItem(3)
+        ArtifactTab_setActiveButton(shoulders, bfaList)
     end)
     shoulders:Show()
+    table.insert(bfaList, head)
+    table.insert(bfaList, shoulders)
+    table.insert(bfaList, chest)
 end
