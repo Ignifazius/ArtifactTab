@@ -111,6 +111,8 @@ local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
 		ArtifactTab_scanArtes()
 		ArtifactTab_createSortedButtons()
 		isReload = true;
+    elseif (event == "ADDON_LOADED" and arg1 == "Blizzard_AzeriteUI") then
+        ArtifactTab_BFAButton()
     elseif (event == "ADDON_LOADED" and arg1 == "Blizzard_TalentUI") then
         ArtifactTab_createAddonButton()
 	elseif (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED") then
@@ -120,7 +122,8 @@ local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
 		ArtifactTab_clearLists()
 		ArtifactTab_scanArtes()
 		ArtifactTab_createSortedButtons()
-	end
+    end 
+    --print(arg1)
 end
 
 eventResponseFrame:SetScript("OnEvent", eventHandler);
@@ -160,7 +163,7 @@ function ArtifactTab_getLocalizedSPeccByID(specializationID)
 end
 
 function ArtifactTab_createAddonButton()
-    local slotId = GetInventorySlotInfo("MainHandSlot")
+    local slotId = GetInventorySlotInfo("MainHandSlot") --TODO replace with ArtifactTab_getEquippedItemID()
     local itemId = GetInventoryItemID("player", slotId)
     if itemId then -- somehow the ID is nil if the player logs in
         --local name, _, quality = GetItemInfo(itemId)
@@ -373,13 +376,13 @@ function ArtifactTab_createArteButton(name, container, slot)
 end
 
 
-function ArtifactTab_createButton(name, frame, parentFrame)
+function ArtifactTab_createGenericButton(name, frame, parentFrame, text)
 	--local b = CreateFrame("Button",name,PlayerTalentFrame)
 	local b = CreateFrame("Button","ArtifactTab_Button_" .. name,parentFrame)
 	b:SetPoint("LEFT", frame ,"RIGHT", -5, 0)
 	local bFontString = b:CreateFontString()
 	bFontString:SetFont(UIFont, 10, "OUTLINE")
-	bFontString:SetText(ArtifactTab_arteToSpecc(name))
+	bFontString:SetText(text)
 	bFontString:SetAllPoints(b)
 	b:SetFontString(bFontString)
 	b:SetSize(bFontString:GetWidth()+30,30)--*1.4
@@ -392,6 +395,10 @@ function ArtifactTab_createButton(name, frame, parentFrame)
 	highTex:SetAllPoints(b)
 	b:SetHighlightTexture(highTex)
 	return b
+end
+
+function ArtifactTab_createButton(name, frame, parentFrame)
+    return ArtifactTab_createGenericButton(name, frame, parentFrame, ArtifactTab_arteToSpecc(name))
 end
 
 function ArtifactTab_getEquippedItemID()
@@ -407,7 +414,7 @@ function ArtifactTab_getEquippedItemID()
 end
 
 function ArtifactTab_createEquipedButton()
-	local slotId = GetInventorySlotInfo("MainHandSlot")
+	local slotId = GetInventorySlotInfo("MainHandSlot") --TODO: replace with ArtifactTab_getEquippedItemID()
 	local itemId = GetInventoryItemID("player", slotId)
 	if itemId then -- somehow the ID is nil if the player logs in
 		--local name, _, quality = GetItemInfo(itemId)
@@ -450,4 +457,38 @@ function ArtifactTab_arteToSpecc(id)
 		return name 
 	end
 	return retName
+end
+
+function ArtifactTab_openEquippedItem(slotID)
+    local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID);
+    if C_Item.DoesItemExist(itemLocation) and C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItem(itemLocation) then
+        OpenAzeriteEmpoweredItemUIFromItemLocation(itemLocation);
+    else
+        SocketInventoryItem(slotID);
+    end
+end
+
+function ArtifactTab_BFAButton()
+    local dummy = CreateFrame("Button", "Anchor", AzeriteEmpoweredItemUI)
+    dummy:SetPoint("BOTTOMLEFT", AzeriteEmpoweredItemUI ,"BOTTOMLEFT", 0, -13)
+    dummy:SetWidth(1)
+    dummy:SetHeight(1)
+    dummy:SetText("Head")
+    dummy:SetFrameStrata("LOW")
+    dummy:Show()
+    local head = ArtifactTab_createGenericButton("BfaButtonHead", dummy, AzeriteEmpoweredItemUI, "Head")
+    head:SetScript("OnClick", function()
+        ArtifactTab_openEquippedItem(1)
+    end)
+    head:Show()
+    local chest = ArtifactTab_createGenericButton("BfaButtonChest", head, AzeriteEmpoweredItemUI, "Chest")
+    chest:SetScript("OnClick", function()
+        ArtifactTab_openEquippedItem(5)
+    end)
+    chest:Show()
+    local shoulders = ArtifactTab_createGenericButton("BfaButtonShoulders", chest, AzeriteEmpoweredItemUI, "Shoulders")
+    shoulders:SetScript("OnClick", function()
+        ArtifactTab_openEquippedItem(3)
+    end)
+    shoulders:Show()
 end
