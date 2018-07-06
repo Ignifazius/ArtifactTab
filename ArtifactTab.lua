@@ -524,25 +524,28 @@ function ArtifactTab_BFAButton()
         end)
         head:Show()
         table.insert(bfaList, head)
+        anchor = head
     end
     
     if ArtifactTab_isAzeriteItem(5) then
-        local chest = ArtifactTab_createGenericButton("BfaButtonChest", head, AzeriteEmpoweredItemUI, "Chest")
+        local chest = ArtifactTab_createGenericButton("BfaButtonChest", anchor, AzeriteEmpoweredItemUI, "Chest")
         chest:SetScript("OnClick", function()
             ArtifactTab_openEquippedItem(5)
             ArtifactTab_setActiveButton(chest, bfaList)
         end)
         chest:Show()
         table.insert(bfaList, chest)
+        anchor = chest
     end
     
     if ArtifactTab_isAzeriteItem(3) then
-        local shoulders = ArtifactTab_createGenericButton("BfaButtonShoulders", chest, AzeriteEmpoweredItemUI, "Shoulders")
+        local shoulders = ArtifactTab_createGenericButton("BfaButtonShoulders", anchor, AzeriteEmpoweredItemUI, "Shoulders")
         shoulders:SetScript("OnClick", function()
             ArtifactTab_openEquippedItem(3)
             ArtifactTab_setActiveButton(shoulders, bfaList)
         end)
         shoulders:Show()
         table.insert(bfaList, shoulders)
+        anchor = shoulders
     end  
 end
