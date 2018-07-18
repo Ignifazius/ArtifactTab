@@ -116,9 +116,11 @@ local function eventHandler(self, event, arg1 , arg2, arg3, arg4, arg5)
         ArtifactTab_BFAButton()
     elseif (event == "ADDON_LOADED" and arg1 == "Blizzard_TalentUI") then
         ArtifactTab_createAddonButton()
-	elseif (event == "BAG_UPDATE" or event == "PLAYER_EQUIPMENT_CHANGED") then
+	elseif (event == "BAG_UPDATE") then
+        ArtifactTab_checkIFUpdateIsNeeded()
+    elseif (event == "PLAYER_EQUIPMENT_CHANGED") then
 		ArtifactTab_checkIFUpdateIsNeeded()
-		--print(event.." "..arg1)
+        --TODO bfa check
 	elseif (event =="PLAYER_ENTERING_WORLD" and isReload) then
 		ArtifactTab_clearLists()
 		ArtifactTab_scanArtes()
@@ -131,7 +133,7 @@ eventResponseFrame:SetScript("OnEvent", eventHandler);
 
 function createTempBtn() -- does not work well
     local b = CreateFrame("Button","TmpButton",PlayerTalentFrame, "CharacterFrameTabButtonTemplate")
-    b:SetPoint("LEFT", "PlayerTalentFrameTab3" ,"RIGHT", 100, 3)
+    b:SetPoint("LEFT", "PlayerTalentFrameTab2" ,"RIGHT", 100, 3)
     b:SetFrameStrata("LOW")
     b:SetWidth(80)
     b:SetHeight(22)
@@ -154,6 +156,13 @@ function ArtifactTab_clearLists()
 	arteList = {}
 end
 
+function ArtifactTab_clearBFALists()
+	for i=1,#bfaList do
+		bfaList[i]:Hide()
+	end
+	bfaList = {}
+end
+
 function ArtifactTab_getLocalizedSPeccByID(specializationID)
 	if specializationID == 1 then
 		return ArtifactTab_getFishingString();
@@ -170,9 +179,9 @@ function ArtifactTab_createAddonButton()
     local _, _, classIndex = UnitClass("player");
     local usedFrame
     if classIndex == 3 then -- hunter
-        usedFrame = PlayerTalentFrameTab4
-    else
         usedFrame = PlayerTalentFrameTab3
+    else
+        usedFrame = PlayerTalentFrameTab2
     end
     if itemId then -- somehow the ID is nil if the player logs in
         --local name, _, quality = GetItemInfo(itemId)
@@ -183,7 +192,7 @@ function ArtifactTab_createAddonButton()
             buttonArte:SetFrameStrata("LOW")
             local bFontString = buttonArte:CreateFontString()
             bFontString:SetFont(UIFont, 11, "OUTLINE")
-            bFontString:SetText(ITEM_QUALITY6_DESC)
+            bFontString:SetText(ITEM_QUALITY6_DESC) -- "Artifact" translation
             --bFontString:SetAllPoints(buttonArte)
             bFontString:SetPoint("TOP",buttonArte,"TOP",0,3)
             bFontString:SetPoint("LEFT",buttonArte,"LEFT",0,0)
@@ -297,25 +306,16 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 			for slot=0,32 do
 				local _, _, _, quality, _, _, _, _, _, itemID = GetContainerItemInfo(container, slot)
 				if quality == 6 and ArtifactTab_isValidArtifact(itemID) then
-					--name = GetItemInfo(itemID)
-					--print(#arteList)
 					for i=1, #arteList do 
 						if arteList[i]["id"] == ArtifactTab_getMainhandArtifactID(itemID) then
-							--print(arteList[i]["type"])
 							if arteList[i]["type"] == "bag" then
-							--print(arteList[i]["slot"].. " "..slot.." | "..arteList[i]["container"].." "..container)
 								if arteList[i]["slot"] == slot and arteList[i]["container"] == container then						
-									--print("(inv) no update needed")
 								else
-									--print("(inv) update needed")
 									updateRequired = true
 								end
 							elseif arteList[i]["type"] == "equipped" then
-								--print(arteList[i]["id"].." "..ArtifactTab_getEquippedItemID())
 								if arteList[i]["id"] == ArtifactTab_getEquippedItemID() then
-									--print("(eq) no update needed")
 								else
-									--print("(eq) update needed")
 									updateRequired = true
 								end
 							end
@@ -326,7 +326,6 @@ function ArtifactTab_checkIFUpdateIsNeeded()
 		end
 	end
 	if updateRequired then
-		--print("updating...")
 		-- pretty sure there is a better solution than this lazy hotfix
 		ArtifactTab_clearLists()
 		ArtifactTab_scanArtes()
